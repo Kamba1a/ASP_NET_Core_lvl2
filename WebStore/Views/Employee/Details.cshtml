@@ -1,0 +1,43 @@
+﻿@model EmployeeViewModel
+
+@{
+    ViewData["Title"] = "О работнике";
+}
+
+@* альтернативный способ отобразить инфу - команды (но чтобы отображалось все красиво, надо настраивать в css):
+    @Html.DisplayForModel()
+    @Html.EditorForModel()*@
+
+<div style="margin-left: 25px">
+    @Html.ActionLink("<<< Вернуться к списку работников", "Employees")
+    <br>
+    <h1>Информация о работнике</h1>
+
+    <table class="table">
+        <tr>
+            <td class="col-md-1">ID</td>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <td>Фамилия</td>
+            <td>@Model.LastName</td>
+        </tr>
+        <tr>
+            <td>Имя</td>
+            <td>@Model.FirstName</td>
+        </tr>
+        <tr>
+            <td>Отчество</td>
+            <td>@Model.Patronymic</td>
+        </tr>
+        <tr>
+            <td>Возраст</td>
+            <td>@Model.Age лет</td>
+        </tr>
+        <tr>
+            <td>Должность</td>
+            <td>@Model.Position</td>
+        </tr>
+    </table>
+    <br>
+</div>

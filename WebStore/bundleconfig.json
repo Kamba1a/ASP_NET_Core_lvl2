@@ -1,0 +1,30 @@
+// Configure bundling and minification for the project.
+// More info at https://go.microsoft.com/fwlink/?LinkId=808241
+[
+  { //собираем файлы css (bundling)
+    "outputFileName": "wwwroot/css/site.min.css", //имя файла на выходе
+    // An array of relative input file paths. Globbing patterns supported
+    "inputFiles": [ //все файлы, которые объединяем
+      "wwwroot/css/prettyPhoto.css",
+      "wwwroot/css/price-range.css",
+      "wwwroot/css/animate.css",
+      //"wwwroot/css/main.css",  // ломал билд проекта (недопустимые символы)	
+      "wwwroot/css/responsive.css"
+    ]
+  },
+  { //собираем файлы json
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/price-range.js",
+      "wwwroot/js/jquery.prettyPhoto.js",
+      "wwwroot/js/main.js"
+    ],
+    // Optionally specify minification options
+    "minify": { //опции для минификации для json
+      "enabled": true, //минификация включена
+      "renameLocals": true //сокращение имен переменных
+    },
+    // Optionally generate .map file
+    "sourceMap": true //генерируем .map файл - служебный файл, который содержит информацию о проведенных преобразованиях
+  }
+] 

@@ -1,0 +1,66 @@
+﻿@*Мастер-страница - содержит разметку header, footer, menu  итд (то, что повторяется на всех страницах)*@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    @*Вставка названия вкладки*@
+    <title>@ViewData["Title"]</title>
+
+    <environment include="Development"> @* в режиме разработки (Properties=> Debug=> ASPNETCORE_ENVIRONMENT=Development) подключать обычные css файлы *@
+        <link href="~/css/prettyPhoto.css" rel="stylesheet">
+        <link href="~/css/price-range.css" rel="stylesheet">
+        <link href="~/css/animate.css" rel="stylesheet">
+        <link href="~/css/responsive.css" rel="stylesheet">
+    </environment>
+    <environment exclude="Development">
+        @* иначе подключать минимизированный css (в который собраны предыдущие файлы)*@
+        <link href="~/css/site.min.css" rel="stylesheet" asp-append-version="true" /> @* append-version для отслеживания версии файла браузером и своевременного его обновления в кэше при изменении файла *@
+    </environment>
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/main.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="~/js/html5shiv.js"></script>
+    <script src="~/js/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="~/images/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="~/images/ico/apple-touch-icon-57-precomposed.png">
+
+</head><!--/head-->
+<body>
+    @await Html.PartialAsync("_Header")
+    <div>
+        @*Вставка контента страницы*@
+        @RenderBody()
+    </div>
+    @await Html.PartialAsync("_Footer")
+
+    <environment include="Development">
+        <script src="~/js/price-range.js"></script>
+        <script src="~/js/jquery.prettyPhoto.js"></script>
+        <script src="~/js/main.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+
+
+    <!--Секция для отображения кастомных скриптов, если понадобятся-->
+    @RenderSection("scripts", false) @*параметр false означает, что секция не обязательна, т.е. если на какой-либо странице нет @section Scripts{...}, то ошибки не будет*@
+</body>
+</html>

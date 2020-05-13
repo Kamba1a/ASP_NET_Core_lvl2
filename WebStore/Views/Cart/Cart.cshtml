@@ -1,0 +1,96 @@
+﻿@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        @if (Model.Cart.TotalPrice == 0) {
+            <h3>Ваша корзина пуста</h3>
+        }
+        else {
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+                        <td class="image">Item</td>
+                        <td class="description"></td>
+                        <td class="price">Price</td>
+                        <td class="quantity">Quantity</td>
+                        <td class="total">Total</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (CartItemViewModel item in Model.Cart.CartItems)
+                    {
+                        <tr>
+                            <td class="cart_product">
+                                <a href=""><img src="~/images/shop/@item.Product.ImageUrl" alt=""></a>                                                              @*[ОК]ссылка на изображение товара*@
+                            </td>
+                            <td class="cart_description">
+                                <h4><a asp-controller="Catalog" asp-action="ProductDetails" asp-route-productId="@item.Product.Id">@item.Product.Name</a></h4>      @*[ОК]название товара + ссылка на детали*@
+                                <p>Web ID: 1089772</p>                                                                                                              @*Артикул товара*@
+                            </td>
+                            <td class="cart_price">
+                                <p>$@item.Price</p>                                                                                                                 @*[ОК]цена за единицу товара*@
+                            </td>
+                            <td class="cart_quantity">
+                                <div class="cart_quantity_button">
+                                    <a asp-action="DecrementProductQuantity" asp-route-productId="@item.Product.Id" class="cart_quantity_down"> - </a>              @*[ОК]уменьшить количество товара*@
+                                    <input class="cart_quantity_input" type="text" name="quantity" value="@item.Quantity" autocomplete="off" size="2">              @*[ОК]количество товара*@
+                                    <a asp-action="AddToCart" asp-route-productId="@item.Product.Id" asp-route-returnUrl="@Context.Request.Path" class="cart_quantity_up"> + </a> @*увеличить количество товара*@
+                                </div>
+                            </td>
+                            <td class="cart_total">
+                                <p class="cart_total_price">$@(item.Price * item.Quantity)</p>                                                                        @*[ОК]цена товара с учетом количества*@
+                            </td>
+                            <td class="cart_delete">
+                                <a asp-action="RemoveProduct" asp-route-productId="@item.Product.Id" class="cart_quantity_delete"><i class="fa fa-times"></i></a>   @*[ОК]удалить товар из корзины*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+</section> <!--/#cart_items-->
+
+@if (Model.Cart.TotalPrice > 0) {
+<section id="do_action">
+    @if (!User.Identity.IsAuthenticated)
+    {
+    <div class="container">
+        <div class="row">
+            Итого: @Model.Cart.TotalPrice
+        </div>
+        <div class="heading">
+            <h3>Для оформления заказа вам необходимо войти в личный кабинет или зарегистрироваться</h3>
+        </div>
+    </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="heading">
+                <h3>Офомрление заказа</h3>
+                <p>Заполните ваши данные:</p>
+            </div>
+            <div class="row">
+                <form method="post" asp-action="OrderCheckout" asp-antiforgery="true">
+                    @await Html.PartialAsync("Partial/_OrderDetails", Model.OrderData)
+                    @await Html.PartialAsync("Partial/_OrderCheckout", Model.Cart.TotalPrice)
+                </form>
+            </div>
+        </div>
+    }
+</section><!--/#do_action-->
+}

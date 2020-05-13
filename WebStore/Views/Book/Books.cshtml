@@ -1,0 +1,26 @@
+﻿@model IEnumerable<BookViewModel>
+
+@{
+    ViewData["Title"] = "Книги";
+    Layout = null;
+}
+
+<a asp-controller="Home" asp-action="Index"><<< На главную страницу</a>
+<br />
+<h3>Список книг</h3>
+@Html.ActionLink("Добавить книгу", "BookEdit")
+<br />
+<br />
+<table>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id .</td>
+            <td>@item.Title</td>
+            <td>@Html.ActionLink("Подробнее...", "BookDetails", new { id = item.Id })</td>
+            <td>@Html.ActionLink("Редактировать", "BookEdit", new { id = item.Id })</td>
+            <td>@Html.ActionLink("Удалить", "BookDelete", new { id = item.Id })</td>
+        </tr>
+    }
+</table>
+<br />

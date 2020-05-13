@@ -1,0 +1,42 @@
+﻿@model EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Редактирование работника";
+}
+<div style="margin-left: 25px">
+    @Html.ActionLink("<<< Назад к списку", "Employees")
+    <br>
+    <h3>Редактирование/добавление работника</h3>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div> @*также можно добавить сообщение отдельно под каждым полем, используя asp-validation-for*@
+                <div class="form-group">
+                    <label class="control-label" asp-for="FirstName"></label>
+                    <input class="form-control" asp-for="FirstName" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="LastName"></label>
+                    <input class="form-control" asp-for="LastName" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="Patronymic"></label>
+                    <input class="form-control" asp-for="Patronymic" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="Age"></label>
+                    <input class="form-control" asp-for="Age" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="Position"></label>
+                    <input class="form-control" asp-for="Position" />
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-default" type="submit" value="Сохранить" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+</div>

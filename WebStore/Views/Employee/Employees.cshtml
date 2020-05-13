@@ -1,0 +1,43 @@
+﻿@model IEnumerable<EmployeeViewModel>
+@*для просмотра представлений без перезапуска отладчика использовать ctrl+F5*@
+
+@{
+    ViewData["Title"] = "Работники";
+    //Layout = null; //не использовать общее оформление для этой страницы
+    bool IsAdmin = User.IsInRole("Admins"); /*переменная для удобства*/
+}
+
+<div style="margin-left: 25px">
+    <a asp-controller="Home" asp-action="Index"><<< На главную страницу</a> @*переход между представлениями разных контроллеров*@
+    <br>
+    @*ViewData["Title"] - копирование названия вкладки в само представление ("Работники")*@
+    <h3>Список работников</h3>
+    <br>
+    @if (IsAdmin)
+    {
+        <a class="btn btn-success" asp-action="Edit">Добавить работника</a> @*переход между представлениями одного контроллера*@
+    }
+    <br>
+    <br>
+    <table class="table">
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td class="col-md-2">@item.LastName @item.FirstName @item.Patronymic</td>
+            <td class="col-md-1">@item.Age лет</td>
+            <td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.ActionLink("Детали...", "Details", new { id = item.Id })@*ссылка с передачей параметра (id)*@
+                }
+                @if(IsAdmin)
+                {
+                    <a class="fa fa-edit" asp-action="Edit" asp-route-id="@item.Id" style="color: green"></a> @*аналог @Html.ActionLink с передачей параметра*@
+                    <a class="fa fa-trash-o" asp-action="Delete" asp-route-id="@item.Id" style="color: red"></a> @*аналог @Html.ActionLink("Удалить", "Delete", new { id = item.Id })*@
+                }
+            </td>
+        </tr>
+        }
+    </table>
+    <br>
+</div>
