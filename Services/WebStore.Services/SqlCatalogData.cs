@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
-namespace WebStore.Infrastructure.Services
+namespace WebStore.Services
 {
     public class SqlCatalogData : ICatalogData
     {
@@ -50,7 +47,7 @@ namespace WebStore.Infrastructure.Services
         {
             return GetProducts().FirstOrDefault(product => product.Id==id);
 
-            //вариант из методички, который сразу подсасывает модель бренда в товаре (.Include) и можно обойтись без доп.метода GetBrandById (но только если входной тип - DbSet)
+            //вариант из методички, который сразу подтягивает модель бренда в товаре (.Include) и можно обойтись без доп.метода GetBrandById (но только если входной тип - DbSet)
             //return _webStoreContext
             //           .Products
             //           .Include(p => p.Brand)

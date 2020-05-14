@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebStore.Domain.Entities.Base.Interfaces
+﻿namespace WebStore.Domain.Entities.Base.Interfaces
 {
     /// <summary>Сущность имеющая номер для сортировки по порядку</summary>
     public interface IOrderedEntity

@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using WebStore.Domain;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Entities.Identity;
 

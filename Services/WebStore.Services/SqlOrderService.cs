@@ -4,10 +4,10 @@ using System.Linq;
 using WebStore.DAL;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Entities.Identity;
-using WebStore.Infrastructure.Interfaces;
-using WebStore.Models;
+using WebStore.Domain.Models;
+using WebStore.Interfaces.Services;
 
-namespace WebStore.Infrastructure.Services
+namespace WebStore.Services
 {
     public class SqlOrderService : ISqlOrderService
     {
@@ -25,7 +25,7 @@ namespace WebStore.Infrastructure.Services
             return _webStoreContext.Orders.Where(o => o.User.UserName == username);
         }
 
-        Order ISqlOrderService.CreateOrder(OrderDetailsViewModel model, CartViewModel cart, string UserName)
+        public Order CreateOrder(OrderDetailsViewModel model, CartViewModel cart, string UserName)
         {
             Order order = new Order()
             {

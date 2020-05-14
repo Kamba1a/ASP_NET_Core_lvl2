@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.DependencyInjection;
-using WebStore.Domain;
-using WebStore.Domain.Entities;
+using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
 
-namespace WebStore.DAL
+namespace WebStore.Services.Data
 {
     /// <summary>
     /// Класс для наполнения таблиц в БД начальными данными

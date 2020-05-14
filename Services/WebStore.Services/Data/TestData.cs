@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using WebStore.Domain.Entities;
 
-namespace WebStore.DAL
+namespace WebStore.Services.Data
 {
     public class TestData
     {
