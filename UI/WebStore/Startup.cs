@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Clients.Values;
 using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
 using WebStore.Domain.Models;
+using WebStore.Interfaces.Api;
 using WebStore.Interfaces.Services;
 using WebStore.Services;
 using WebStore.Services.Data;
@@ -91,6 +93,8 @@ namespace WebStore
             services.AddScoped<ISqlOrderService, SqlOrderService>();
 
             services.AddTransient<DbInitializer>();
+
+            services.AddScoped<IValueServices, ValuesClient>(); //регистрация клиента как сервис
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer db) //здесь прописываем, что и как будет использоваться (связано с сервисами)
