@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.DAL;
-using WebStore.Domain;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Services;
 using WebStore.Models;
@@ -26,35 +23,31 @@ namespace WebStore
             _configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services) //сюда добавляем сервисы, какие будем использовать
         {
-            //сюда добавляем сервисы, какие будем использовать
-
             services.AddMvc();
-            //(options => options.Filters.Add(new Example_SimpleActionFilter())) для добавления фильтра ко всем методам всех контроллеров
 
-            //строка подключения SQL:
-            services.AddDbContext<DAL.WebStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            //(options => options.Filters.Add(new Example_SimpleActionFilter())) //для добавления фильтра ко всем методам всех контроллеров
+
+            services.AddDbContext<DAL.WebStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"))); //строка подключения SQL
 
 
-        //Authentication and Authorization//
-            //добавление роли
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<WebStoreContext>()
-                .AddDefaultTokenProviders();
+            //AUTHENTICATION AND AUTHORIZATION//
 
-            //настройка требований к паролю, логину итд (необязательно)
-            services.Configure<IdentityOptions>(options =>
+            services.AddIdentity<User, Role>()
+               .AddEntityFrameworkStores<WebStoreContext>()
+               .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>      //настройка требований к паролю, логину итд (необязательно)
             {
                 // Password settings
+                options.Password.RequiredLength = 3;
                 options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 5;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 1;
 
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
@@ -62,26 +55,29 @@ namespace WebStore
                 options.Lockout.AllowedForNewUsers = true;
 
                 // User settings
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = false;
+                //options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCD...123457890";
             });
 
-            //настройка куки и путей к страницам, относящимся к авторизации (необязательно)
-            services.ConfigureApplicationCookie(options =>
+            services.ConfigureApplicationCookie(options =>      //настройка куки и путей к страницам, относящимся к авторизации (необязательно)
             {
                 // Cookie settings
+                //options.Cookie.Name = "WebStore";
                 //options.Cookie.HttpOnly = true;
-                //options.Cookie.Expiration = TimeSpan.FromDays(150);
+                //options.Cookie.Expiration = TimeSpan.FromDays(10);
+                options.SlidingExpiration = true;
+
                 options.LoginPath = "/Account/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
                 options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
                 options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
-                options.SlidingExpiration = true;
             });
 
-        //Dependency//
-            //Разрешение зависимости:
-            //services.AddSingleton<IService, InMemoryService>(); время жизни сервиса = времени жизни запущенной программы 
-            //services.AddScoped(); равно времени жизни http-запроса (до обновления/закрытия страницы)
-            //services.AddTransient(); - обновляется при каждом запросе
+
+            //DEPENDENCY//
+
+            //AddSingleton время жизни сервиса = времени жизни запущенной программы 
+            //AddScoped равно времени жизни http-запроса (до обновления/закрытия страницы)
+            //AddTransient обновляется при каждом запросе
 
             services.AddSingleton(typeof(IitemData<EmployeeViewModel>), typeof(InMemoryEmployeesData));
             services.AddSingleton(typeof(IitemData<BookViewModel>), typeof(InMemoryBooksData));
@@ -92,40 +88,33 @@ namespace WebStore
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //для работы служебного класса HttpContextAccessor также нужно прописывать зависимость
             services.AddScoped<ICartService, CookieCartService>(); //корзина - AddScoped!
             services.AddScoped<ISqlOrderService, SqlOrderService>();
+
+            services.AddTransient<DbInitializer>();
         }
 
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer db) //здесь прописываем, что и как будет использоваться (связано с сервисами)
         {
-            //здесь прописываем, что и как будет использоваться (связано с сервисами)
+            db.Initialize();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //app.UseBrowserLink();
             }
 
-            //подключение статических ресурсов
-            app.UseStaticFiles();
+            app.UseStaticFiles();             //подключение статических ресурсов
+            //app.UseDefaultFiles();
 
             app.UseRouting();
 
-            //подключаем аутентификацию (после подключения статических файлов для возможности анонимного доступа к ним)
-            app.UseAuthentication();
-            //подключаем авторизацию (именно после UseRouting и до UseEndpoints)
-            app.UseAuthorization(); //нужно подключать только если используются атрибуты [Authorize]
+            app.UseAuthentication(); //подключаем аутентификацию (после UseStaticFiles для возможности анонимного доступа к ресурсам)
+            app.UseAuthorization(); //подключаем авторизацию (между UseRouting и UseEndpoints), нужно подключать только если используются атрибуты [Authorize]
 
             app.UseEndpoints(endpoints =>
             {
-                //области
-                endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-                //контроллер по-умолчанию (имя контроллера/имя метода/действие)
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{Id?}");
-
-                endpoints.MapControllerRoute("controller1", "{controller=Employee}/{action=Employees}/{Id?}");
-
-                endpoints.MapControllerRoute("controller2", "{controller=Book}/{action=Books}/{Id?}");
+                //пути по-умолчанию к главным страницам
+                endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");  //области
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{Id?}");              //контроллеры
 
                 //endpoints.MapGet("/", async context =>
                 //{

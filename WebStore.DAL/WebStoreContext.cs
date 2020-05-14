@@ -7,13 +7,14 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
+using WebStore.Domain.Entities.Identity;
 
 namespace WebStore.DAL
 {
     /// <summary>
     /// Класс для доступа к таблицам БД
     /// </summary>
-    public class WebStoreContext: IdentityDbContext<User> //до подключения Identity просто :DbContext
+    public class WebStoreContext: IdentityDbContext<User, Role, string> //до подключения Identity просто :DbContext
     {
         public WebStoreContext(DbContextOptions options) : base(options)
         {

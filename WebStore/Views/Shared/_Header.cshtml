@@ -62,11 +62,12 @@
                 <div class="col-sm-6">
                     <div class="shop-menu pull-right">
                         <ul class="nav navbar-nav">
-                            <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-                            <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
                             <li><a asp-controller="home" asp-action="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-                            <li><a asp-controller="Cart" asp-action="Cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-
+                            <li><a asp-controller="Cart" asp-action="Cart"><i class="fa fa-shopping-cart"></i> Корзина</a></li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li><a asp-controller="Profile" asp-action="Index"><i class="fa fa-user"></i> Личный кабинет</a></li>
+                            }
                             @if (User.IsInRole("Admins"))
                             {
                                 <li><a asp-area="Admin" asp-controller="Home" asp-action="Index"><i class="fa fa-gear"></i> Админка</a></li>
@@ -97,11 +98,12 @@
                     </div>
                     <div class="mainmenu pull-left">
                         <ul class="nav navbar-nav collapse navbar-collapse">
-                            <li><a asp-controller="home" asp-action="index" class="active">Home</a></li>
+                            <li><a asp-controller="home" asp-action="index" class="active">Главная</a></li>
+                            <li><a asp-controller="Catalog" asp-action="Shop">Магазин</a></li>
                             <li class="dropdown">
                                 <a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                 <ul role="menu" class="sub-menu">
-                                    <li><a asp-controller="Catalog" asp-action="Shop">SHOP</a></li>
+                                    <li><a asp-controller="Catalog" asp-action="Shop">Shop</a></li>
                                     <li><a asp-controller="home" asp-action="Checkout">Checkout</a></li>
                                     <li><a asp-controller="home" asp-action="Cart">CartExample</a></li>
                                 </ul>

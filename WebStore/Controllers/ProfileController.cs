@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Domain.Entities;
 using WebStore.Infrastructure.Interfaces;
@@ -9,6 +10,7 @@ using WebStore.Models;
 
 namespace WebStore.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         ISqlOrderService _sqlOrderService;

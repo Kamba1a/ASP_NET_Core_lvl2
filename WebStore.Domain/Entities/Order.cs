@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WebStore.Domain.Entities.Base;
+using WebStore.Domain.Entities.Identity;
 
 namespace WebStore.Domain.Entities
 {

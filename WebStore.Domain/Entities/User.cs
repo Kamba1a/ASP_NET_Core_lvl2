@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace WebStore.Domain
+namespace WebStore.Domain.Entities.Identity
 {
-    /// <summary>
-    /// Сущность пользователь
-    /// </summary>
-    public class User: IdentityUser
+    public class User : IdentityUser //в некоторых случаях класс можно оставить пустым (см. первый курс)
     {
+        public const string Administrator = "Admin";
+        public const string AdminDefaultPassword = "admin123";
     }
 }
