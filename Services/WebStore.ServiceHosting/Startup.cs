@@ -45,8 +45,8 @@ namespace WebStore.ServiceHosting
                 options.User.RequireUniqueEmail = false;
             });
 
-            services.AddSingleton(typeof(IitemData<EmployeeViewModel>), typeof(InMemoryEmployeesData));
-            services.AddSingleton(typeof(IitemData<BookViewModel>), typeof(InMemoryBooksData));
+            services.AddSingleton(typeof(IObjectService<BookViewModel>), typeof(InMemoryBooksData));
+            services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
 
             services.AddScoped<ICatalogData, SqlCatalogData>();
             services.AddScoped<ICartService, CookieCartService>();

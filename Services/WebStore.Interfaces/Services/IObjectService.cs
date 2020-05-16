@@ -2,26 +2,31 @@
 
 namespace WebStore.Interfaces.Services
 {
-    public interface IitemData<T>
+    /// <summary>
+    /// Универсальный интерфейс для работы с объектами
+    /// (делался ради интереса)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IObjectService<T>
     {
         /// <summary>
-        /// Возвращает список сотрудников
+        /// Возвращает коллекцию объектов
         /// </summary>
         /// <returns></returns>
         IEnumerable<T> GetAll();
         /// <summary>
-        /// Возвращает сотрудника по Id
+        /// Возвращает объект по Id
         /// </summary>
         /// <param name="id">Id</param>
         /// <returns></returns>
         T GetById(int id);
         /// <summary>
-        /// Добавляет нового сотрудника в список
+        /// Добавляет новый объект в коллекцию
         /// </summary>
         /// <param name="employee"></param>
         void AddNew(T employee);
         /// <summary>
-        /// Удаляет сотрудника из списка
+        /// Удаляет объект из коллекции
         /// </summary>
         /// <param name="id"></param>
         void Delete(int id);

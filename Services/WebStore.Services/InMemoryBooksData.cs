@@ -5,7 +5,7 @@ using WebStore.Interfaces.Services;
 
 namespace WebStore.Services
 {
-    public class InMemoryBooksData: IitemData<BookViewModel>
+    public class InMemoryBooksData: IObjectService<BookViewModel>
     {
         List<BookViewModel> _books;
 
