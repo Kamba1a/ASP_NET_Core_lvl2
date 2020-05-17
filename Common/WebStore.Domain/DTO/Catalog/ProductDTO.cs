@@ -5,6 +5,9 @@ using WebStore.Domain.Entities.Base.Interfaces;
 
 namespace WebStore.Domain.DTO.Catalog
 {
+    //модель нужна для работы с WebAPI, чтобы избежать проблем с сериализацией данных в json
+    //(проблемы возникают, когда модели ссылаются друг на друга, вызывая зацикливание сериализатора до бесконечности)
+    //модели DTO создаются специально с учетом, чтобы не было такой зацикленности
     public class ProductDTO: IBaseEntity, INamedEntity, IOrderedEntity
     {
         public int Id { get; set; }

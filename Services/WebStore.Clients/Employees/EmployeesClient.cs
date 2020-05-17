@@ -15,6 +15,8 @@ namespace WebStore.Clients.Employees
         { 
         }
 
+        //все методы реализуются через базовый класс клиента в соответствии с типом запроса, и направляют запросы методам контроллера
+
         public void Add(Employee employee)
         {
             Post(_ServiceAddress, employee);
@@ -32,7 +34,7 @@ namespace WebStore.Clients.Employees
 
         public IEnumerable<Employee> GetAll()
         {
-            return Get<List<Employee>>(_ServiceAddress);
+            return Get<IEnumerable<Employee>>(_ServiceAddress);
         }
 
         public Employee GetById(int id)

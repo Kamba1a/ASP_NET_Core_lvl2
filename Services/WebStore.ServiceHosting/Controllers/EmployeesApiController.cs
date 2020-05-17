@@ -21,6 +21,8 @@ namespace WebStore.ServiceHosting.Controllers
             _employeesService = employeesService;
         }
 
+        //все методы обязательно помечаются атрибутом, указыващим тип запроса, и который при необходимости содержит путь к методу в параметре 
+
         [HttpPost]
         public void Add([FromBody]Employee Employee) //атрибут [FromBody] ограничивает поиск модели только в теле сообщения (чтобы не получить ее из адресной строки), тут он только для явности
         {

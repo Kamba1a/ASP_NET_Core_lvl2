@@ -40,14 +40,16 @@ namespace WebStore.Clients.Base
         //синхронная версия нужна только в нашем случае, т.к. все сервисы синхронные (по-правильному все должно быть асинхронное)
         //синхронные версии просто выполняем через асинхронные
         //параметр CancellationToken нужен во всех асинхронных операциях для возможности их отмены вызывающей стороной
-        //where T : new() указывает, что шаблон создан только для типов, у которых есть конструктор по-умолчанию
 
-        protected T Get<T>(string url) where T : new() => GetAsync<T>(url).Result;
-        protected async Task<T> GetAsync<T>(string url, CancellationToken Cancel = default) where T : new()
+        protected T Get<T>(string url) => GetAsync<T>(url).Result;
+        protected async Task<T> GetAsync<T>(string url, CancellationToken Cancel = default) //where T : new() //- таким образом можно указать, что шаблон создан только для типов, у которых есть конструктор по-умолчанию
         {
-            var response = await _Client.GetAsync(url, Cancel); //делаем запрос через клиент
-            if (response.IsSuccessStatusCode) return await response.Content.ReadAsAsync<T>(Cancel);
-            return new T(); //в случае ошибки возвращаем значение по-умолчанию
+            var response = await _Client.GetAsync(url, Cancel);                                 //делаем запрос через клиент
+            return await response.EnsureSuccessStatusCode().Content.ReadAsAsync<T>(Cancel);     //в случае успеха возвращаются данные, иначе HttpRequestExeption
+
+            //первоначальная реализация:
+            //if (response.IsSuccessStatusCode) return await response.Content.ReadAsAsync<T>(Cancel);
+            //return new T(); //в случае ошибки возвращаем значение по-умолчанию
         }
 
         protected HttpResponseMessage Post<T>(string url, T item) => PostAsync(url, item).Result;
