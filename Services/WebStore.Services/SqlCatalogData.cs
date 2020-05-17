@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
@@ -23,7 +24,7 @@ namespace WebStore.Services
 
         public IQueryable<Product> GetProducts(ProductFilter filter=null)
         {
-            IQueryable<Product> products = _webStoreContext.Products;
+            IQueryable<Product> products = _webStoreContext.Products.Include(p=>p.Brand).Include(p=>p.Section);
 
             if (filter != null)
             {
@@ -45,20 +46,10 @@ namespace WebStore.Services
 
         public Product GetProductById(int id)
         {
-            return GetProducts().FirstOrDefault(product => product.Id==id);
-
-            //вариант из методички, который сразу подтягивает модель бренда в товаре (.Include) и можно обойтись без доп.метода GetBrandById (но только если входной тип - DbSet)
-            //return _webStoreContext
-            //           .Products
-            //           .Include(p => p.Brand)
-            //           .Include(p => Section)
-            //           .FirstOrDefault(p => p.Id == id);
-
-        }
-
-        public Brand GetBrandById(int id)
-        {
-            return GetBrands().FirstOrDefault(brand => brand.Id==id);
+            return _webStoreContext.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Section)
+                .FirstOrDefault(p => p.Id == id);
         }
     }
 }

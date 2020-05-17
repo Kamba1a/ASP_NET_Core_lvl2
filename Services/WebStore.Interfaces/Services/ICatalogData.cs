@@ -34,12 +34,5 @@ namespace WebStore.Interfaces.Services
         /// <param name="id"></param>
         /// <returns></returns>
         Product GetProductById(int id);
-
-        /// <summary>
-        /// Бренд по ID
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Brand GetBrandById(int id);
     }
 }

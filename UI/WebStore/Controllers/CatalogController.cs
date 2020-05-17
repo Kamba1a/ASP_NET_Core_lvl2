@@ -5,6 +5,7 @@ using WebStore.Domain;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Controllers
 {
@@ -25,14 +26,7 @@ namespace WebStore.Controllers
             {
                 BrandId = brandId,
                 SectionId = sectionId,
-                Products = products.Select(product => new ProductViewModel
-                {
-                    Id = product.Id,
-                    ImageUrl = product.ImageUrl,
-                    Name = product.Name,
-                    Order = product.Order,
-                    Price = product.Price
-                }).OrderBy(p => p.Order).ToList()
+                Products = products.ToView()
             };
 
             return View(catalogViewModel);
@@ -42,17 +36,7 @@ namespace WebStore.Controllers
         {
             Product product = _catalogData.GetProductById(productId);
             if (product == null) return NotFound();
-
-            ProductViewModel productViewModel = new ProductViewModel()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                ImageUrl = product.ImageUrl,
-                BrandName = _catalogData.GetBrandById(product.BrandId).Name ?? String.Empty
-            };
-
-            return View(productViewModel);
+            return View(product.ToView());
         }
     }
 }
