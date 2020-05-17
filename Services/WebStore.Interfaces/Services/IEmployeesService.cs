@@ -9,9 +9,9 @@ namespace WebStore.Interfaces.Services
 
         Employee GetById(int id);
 
-        void Add(Employee Employee);
+        void Add(Employee employee);
 
-        void Edit(int id, Employee Employee);
+        void Edit(int id, Employee employee);
 
         bool Delete(int id);
 

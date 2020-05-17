@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Clients.Employees;
 using WebStore.Clients.Values;
 using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
@@ -83,7 +84,8 @@ namespace WebStore
             //AddTransient обновляется при каждом запросе
 
             services.AddSingleton(typeof(IObjectService<BookViewModel>), typeof(InMemoryBooksData));
-            services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
+            //services.AddSingleton<IEmployeesService, InMemoryEmployeesService>(); //было до создания клиента
+            services.AddSingleton<IEmployeesService, EmployeesClient>();
 
             //services.AddSingleton<ICatalogData, InMemoryCatalogData>(); //было до подключения БД
             services.AddScoped<ICatalogData, SqlCatalogData>(); //после подключения БД (и стало AddScoped)
