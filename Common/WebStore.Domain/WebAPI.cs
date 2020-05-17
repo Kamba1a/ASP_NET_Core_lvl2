@@ -15,5 +15,9 @@ namespace WebStore.Domain
         /// EmployeesAPIController
         /// </summary>
         public const string Employees = "api/employees";
+        /// <summary>
+        /// CatalogAPIController
+        /// </summary>
+        public const string Catalog = "api/catalog";
     }
 }
