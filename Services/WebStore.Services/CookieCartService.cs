@@ -117,7 +117,7 @@ namespace WebStore.Services
                 { 
                     ProductsIdList = Cart.Items.Select(cartItem => cartItem.ProductId).ToList()     //(фильтр по списку ID товаров из корзины)
                 })
-                .ToView();                                                                          //сразу преобразовываем каждый Product в ProductViewModel
+                .FromDTO().ToView();                                                                //сразу преобразовываем каждый Product в ProductViewModel
 
             List<CartItemViewModel> cartItems = new List<CartItemViewModel>();
 

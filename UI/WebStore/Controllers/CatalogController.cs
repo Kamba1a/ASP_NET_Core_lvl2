@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Domain;
+using WebStore.Domain.DTO.Catalog;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
@@ -20,13 +22,13 @@ namespace WebStore.Controllers
 
         public IActionResult Shop(int? sectionId, int? brandId)
         {
-            IQueryable<Product> products = _catalogData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId });
+            IEnumerable<ProductDTO> products = _catalogData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId });
 
             CatalogViewModel catalogViewModel = new CatalogViewModel
             {
                 BrandId = brandId,
                 SectionId = sectionId,
-                Products = products.ToView()
+                Products = products.FromDTO().ToView()
             };
 
             return View(catalogViewModel);
@@ -34,9 +36,9 @@ namespace WebStore.Controllers
 
         public IActionResult ProductDetails(int productId)
         {
-            Product product = _catalogData.GetProductById(productId);
+            ProductDTO product = _catalogData.GetProductById(productId);
             if (product == null) return NotFound();
-            return View(product.ToView());
+            return View(product.FromDTO().ToView());
         }
     }
 }
