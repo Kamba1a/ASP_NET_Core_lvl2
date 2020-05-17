@@ -83,7 +83,6 @@ namespace WebStore
             //AddScoped равно времени жизни http-запроса (до обновления/закрытия страницы)
             //AddTransient обновляется при каждом запросе
 
-            services.AddSingleton(typeof(IObjectService<BookViewModel>), typeof(InMemoryBooksData));
             //services.AddSingleton<IEmployeesService, InMemoryEmployeesService>(); //было до создания клиента
             services.AddSingleton<IEmployeesService, EmployeesClient>();
 
