@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using WebStore.Domain.Entities;
-using WebStore.Domain.Models;
+﻿using System.Collections.Generic;
+using WebStore.Domain.DTO.Orders;
 
 namespace WebStore.Interfaces.Services
 {
     public interface ISqlOrderService
     {
-        IQueryable<Order> GetUserOrders(string username);
-        Order CreateOrder(OrderDetailsViewModel model, CartViewModel cart, string UserName);
+        IEnumerable<OrderDTO> GetUserOrders(string username);
+        OrderDTO CreateOrder(CreateOrderModel createOrderModel, string UserName);
     }
 }

@@ -28,7 +28,7 @@ namespace WebStore.Controllers
                 .Select(order => new UserOrderViewModel()
                 {
                     OrderNumber = order.Id,
-                    Name = order.User.UserName,
+                    Name = order.UserName,
                     Address = order.Address,
                     Phone = order.Phone,
                     TotalSum = order.TotalPrice
