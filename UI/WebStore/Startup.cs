@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Clients.Catalog;
 using WebStore.Clients.Employees;
+using WebStore.Clients.Orders;
 using WebStore.Clients.Values;
 using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
@@ -93,7 +94,9 @@ namespace WebStore
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //для работы служебного класса HttpContextAccessor также нужно прописывать зависимость
             services.AddScoped<ICartService, CookieCartService>(); //корзина - AddScoped!
-            services.AddScoped<ISqlOrderService, SqlOrderService>();
+
+            //services.AddScoped<ISqlOrderService, SqlOrderService>();
+            services.AddScoped<ISqlOrderService, OrdersClient>();
 
             services.AddTransient<DbInitializer>();
 

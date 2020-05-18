@@ -19,5 +19,9 @@ namespace WebStore.Domain
         /// CatalogAPIController
         /// </summary>
         public const string Catalog = "api/catalog";
+        /// <summary>
+        /// OrdersApiController
+        /// </summary>
+        public const string Orders = "api/orders";
     }
 }
