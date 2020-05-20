@@ -18,24 +18,24 @@ using WebStore.Interfaces.Api;
 using WebStore.Interfaces.Services;
 using WebStore.Services;
 using WebStore.Services.Data;
-
+ 
 namespace WebStore
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration; //для обращения к appsettings.json
+        private readonly IConfiguration _configuration; //Г¤Г«Гї Г®ГЎГ°Г Г№ГҐГ­ГЁГї ГЄ appsettings.json
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services) //сюда добавляем сервисы, какие будем использовать
+        public void ConfigureServices(IServiceCollection services) //Г±ГѕГ¤Г  Г¤Г®ГЎГ ГўГ«ГїГҐГ¬ Г±ГҐГ°ГўГЁГ±Г», ГЄГ ГЄГЁГҐ ГЎГіГ¤ГҐГ¬ ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ ГІГј
         {
             services.AddMvc();
 
-            //(options => options.Filters.Add(new Example_SimpleActionFilter())) //для добавления фильтра ко всем методам всех контроллеров
+            //(options => options.Filters.Add(new Example_SimpleActionFilter())) //Г¤Г«Гї Г¤Г®ГЎГ ГўГ«ГҐГ­ГЁГї ГґГЁГ«ГјГІГ°Г  ГЄГ® ГўГ±ГҐГ¬ Г¬ГҐГІГ®Г¤Г Г¬ ГўГ±ГҐГµ ГЄГ®Г­ГІГ°Г®Г«Г«ГҐГ°Г®Гў
 
-            services.AddDbContext<DAL.WebStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"))); //строка подключения SQL
+            services.AddDbContext<DAL.WebStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"))); //Г±ГІГ°Г®ГЄГ  ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­ГЁГї SQL
 
 
             //AUTHENTICATION AND AUTHORIZATION//
@@ -44,7 +44,7 @@ namespace WebStore
                .AddEntityFrameworkStores<WebStoreContext>()
                .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options =>      //настройка требований к паролю, логину итд (необязательно)
+            services.Configure<IdentityOptions>(options =>      //Г­Г Г±ГІГ°Г®Г©ГЄГ  ГІГ°ГҐГЎГ®ГўГ Г­ГЁГ© ГЄ ГЇГ Г°Г®Г«Гѕ, Г«Г®ГЈГЁГ­Гі ГЁГІГ¤ (Г­ГҐГ®ГЎГїГ§Г ГІГҐГ«ГјГ­Г®)
             {
                 // Password settings
                 options.Password.RequiredLength = 3;
@@ -65,7 +65,7 @@ namespace WebStore
                 //options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCD...123457890";
             });
 
-            services.ConfigureApplicationCookie(options =>      //настройка куки и путей к страницам, относящимся к авторизации (необязательно)
+            services.ConfigureApplicationCookie(options =>      //Г­Г Г±ГІГ°Г®Г©ГЄГ  ГЄГіГЄГЁ ГЁ ГЇГіГІГҐГ© ГЄ Г±ГІГ°Г Г­ГЁГ¶Г Г¬, Г®ГІГ­Г®Г±ГїГ№ГЁГ¬Г±Гї ГЄ Г ГўГІГ®Г°ГЁГ§Г Г¶ГЁГЁ (Г­ГҐГ®ГЎГїГ§Г ГІГҐГ«ГјГ­Г®)
             {
                 // Cookie settings
                 //options.Cookie.Name = "WebStore";
@@ -81,29 +81,29 @@ namespace WebStore
 
             //DEPENDENCY//
 
-            //AddSingleton время жизни сервиса = времени жизни запущенной программы 
-            //AddScoped равно времени жизни http-запроса (до обновления/закрытия страницы)
-            //AddTransient обновляется при каждом запросе
+            //AddSingleton ГўГ°ГҐГ¬Гї Г¦ГЁГ§Г­ГЁ Г±ГҐГ°ГўГЁГ±Г  = ГўГ°ГҐГ¬ГҐГ­ГЁ Г¦ГЁГ§Г­ГЁ Г§Г ГЇГіГ№ГҐГ­Г­Г®Г© ГЇГ°Г®ГЈГ°Г Г¬Г¬Г» 
+            //AddScoped Г°Г ГўГ­Г® ГўГ°ГҐГ¬ГҐГ­ГЁ Г¦ГЁГ§Г­ГЁ http-Г§Г ГЇГ°Г®Г±Г  (Г¤Г® Г®ГЎГ­Г®ГўГ«ГҐГ­ГЁГї/Г§Г ГЄГ°Г»ГІГЁГї Г±ГІГ°Г Г­ГЁГ¶Г»)
+            //AddTransient Г®ГЎГ­Г®ГўГ«ГїГҐГІГ±Гї ГЇГ°ГЁ ГЄГ Г¦Г¤Г®Г¬ Г§Г ГЇГ°Г®Г±ГҐ
 
-            //services.AddSingleton<IEmployeesService, InMemoryEmployeesService>(); //было до создания клиента
+            //services.AddSingleton<IEmployeesService, InMemoryEmployeesService>(); //ГЎГ»Г«Г® Г¤Г® Г±Г®Г§Г¤Г Г­ГЁГї ГЄГ«ГЁГҐГ­ГІГ 
             services.AddSingleton<IEmployeesService, EmployeesClient>();
 
-            //services.AddSingleton<ICatalogData, InMemoryCatalogData>(); //было до подключения БД
-            //services.AddScoped<ICatalogData, SqlCatalogData>(); //после подключения БД (и стало AddScoped)
-            services.AddScoped<ICatalogData, CatalogClient>(); //после реализации WebAPI
+            //services.AddSingleton<ICatalogData, InMemoryCatalogData>(); //ГЎГ»Г«Г® Г¤Г® ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­ГЁГї ГЃГ„
+            //services.AddScoped<ICatalogData, SqlCatalogData>(); //ГЇГ®Г±Г«ГҐ ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­ГЁГї ГЃГ„ (ГЁ Г±ГІГ Г«Г® AddScoped)
+            services.AddScoped<ICatalogData, CatalogClient>(); //ГЇГ®Г±Г«ГҐ Г°ГҐГ Г«ГЁГ§Г Г¶ГЁГЁ WebAPI
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //для работы служебного класса HttpContextAccessor также нужно прописывать зависимость
-            services.AddScoped<ICartService, CookieCartService>(); //корзина - AddScoped!
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //Г¤Г«Гї Г°Г ГЎГ®ГІГ» Г±Г«ГіГ¦ГҐГЎГ­Г®ГЈГ® ГЄГ«Г Г±Г±Г  HttpContextAccessor ГІГ ГЄГ¦ГҐ Г­ГіГ¦Г­Г® ГЇГ°Г®ГЇГЁГ±Г»ГўГ ГІГј Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГј
+            services.AddScoped<ICartService, CookieCartService>(); //ГЄГ®Г°Г§ГЁГ­Г  - AddScoped!
 
             //services.AddScoped<ISqlOrderService, SqlOrderService>();
             services.AddScoped<ISqlOrderService, OrdersClient>();
 
             services.AddTransient<DbInitializer>();
 
-            services.AddScoped<IValueServices, ValuesClient>(); //регистрация клиента как сервис
+            services.AddScoped<IValueServices, ValuesClient>(); //Г°ГҐГЈГЁГ±ГІГ°Г Г¶ГЁГї ГЄГ«ГЁГҐГ­ГІГ  ГЄГ ГЄ Г±ГҐГ°ГўГЁГ±
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer db) //здесь прописываем, что и как будет использоваться (связано с сервисами)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer db) //Г§Г¤ГҐГ±Гј ГЇГ°Г®ГЇГЁГ±Г»ГўГ ГҐГ¬, Г·ГІГ® ГЁ ГЄГ ГЄ ГЎГіГ¤ГҐГІ ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ ГІГјГ±Гї (Г±ГўГїГ§Г Г­Г® Г± Г±ГҐГ°ГўГЁГ±Г Г¬ГЁ)
         {
             db.Initialize();
 
@@ -113,19 +113,19 @@ namespace WebStore
                 //app.UseBrowserLink();
             }
 
-            app.UseStaticFiles();             //подключение статических ресурсов
+            app.UseStaticFiles();             //ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­ГЁГҐ Г±ГІГ ГІГЁГ·ГҐГ±ГЄГЁГµ Г°ГҐГ±ГіГ°Г±Г®Гў
             //app.UseDefaultFiles();
 
             app.UseRouting();
 
-            app.UseAuthentication(); //подключаем аутентификацию (после UseStaticFiles для возможности анонимного доступа к ресурсам)
-            app.UseAuthorization(); //подключаем авторизацию (между UseRouting и UseEndpoints), нужно подключать только если используются атрибуты [Authorize]
+            app.UseAuthentication(); //ГЇГ®Г¤ГЄГ«ГѕГ·Г ГҐГ¬ Г ГіГІГҐГ­ГІГЁГґГЁГЄГ Г¶ГЁГѕ (ГЇГ®Г±Г«ГҐ UseStaticFiles Г¤Г«Гї ГўГ®Г§Г¬Г®Г¦Г­Г®Г±ГІГЁ Г Г­Г®Г­ГЁГ¬Г­Г®ГЈГ® Г¤Г®Г±ГІГіГЇГ  ГЄ Г°ГҐГ±ГіГ°Г±Г Г¬)
+            app.UseAuthorization(); //ГЇГ®Г¤ГЄГ«ГѕГ·Г ГҐГ¬ Г ГўГІГ®Г°ГЁГ§Г Г¶ГЁГѕ (Г¬ГҐГ¦Г¤Гі UseRouting ГЁ UseEndpoints), Г­ГіГ¦Г­Г® ГЇГ®Г¤ГЄГ«ГѕГ·Г ГІГј ГІГ®Г«ГјГЄГ® ГҐГ±Г«ГЁ ГЁГ±ГЇГ®Г«ГјГ§ГіГѕГІГ±Гї Г ГІГ°ГЁГЎГіГІГ» [Authorize]
 
             app.UseEndpoints(endpoints =>
             {
-                //пути по-умолчанию к главным страницам
-                endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");  //области
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{Id?}");              //контроллеры
+                //ГЇГіГІГЁ ГЇГ®-ГіГ¬Г®Г«Г·Г Г­ГЁГѕ ГЄ ГЈГ«Г ГўГ­Г»Г¬ Г±ГІГ°Г Г­ГЁГ¶Г Г¬
+                endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");  //Г®ГЎГ«Г Г±ГІГЁ
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{Id?}");              //ГЄГ®Г­ГІГ°Г®Г«Г«ГҐГ°Г»
 
                 //endpoints.MapGet("/", async context =>
                 //{
@@ -133,9 +133,9 @@ namespace WebStore
                 //});
             });
 
-            //аналог app.UseEndpoints в одну строку (но без возможности подробно настроить маршруты по-умолчанию)
+            //Г Г­Г Г«Г®ГЈ app.UseEndpoints Гў Г®Г¤Г­Гі Г±ГІГ°Г®ГЄГі (Г­Г® ГЎГҐГ§ ГўГ®Г§Г¬Г®Г¦Г­Г®Г±ГІГЁ ГЇГ®Г¤Г°Г®ГЎГ­Г® Г­Г Г±ГІГ°Г®ГЁГІГј Г¬Г Г°ГёГ°ГіГІГ» ГЇГ®-ГіГ¬Г®Г«Г·Г Г­ГЁГѕ)
             //app.UseMvcWithDefaultRoute();
-            //кроме того, в services.AddMvc тогда надо прописать options => (options.EnableEndpointRouting = false)
+            //ГЄГ°Г®Г¬ГҐ ГІГ®ГЈГ®, Гў services.AddMvc ГІГ®ГЈГ¤Г  Г­Г Г¤Г® ГЇГ°Г®ГЇГЁГ±Г ГІГј options => (options.EnableEndpointRouting = false)
         }
     }
 }
