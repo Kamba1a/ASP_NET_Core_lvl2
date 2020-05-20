@@ -23,5 +23,20 @@ namespace WebStore.Domain
         /// OrdersApiController
         /// </summary>
         public const string Orders = "api/orders";
+
+        /// <summary>
+        /// класс в классе - для удобства, просто чтобы выделить вложенные в класс константы
+        /// </summary>
+        public static class Identity
+            {
+            /// <summary>
+             /// UsersApiController
+             /// </summary>
+            public const string Users = "api/users";
+            /// <summary>
+            /// RolesApiController
+            /// </summary>
+            public const string Roles = "api/roles";
+        }
     }
 }
