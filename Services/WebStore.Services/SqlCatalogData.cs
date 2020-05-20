@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using WebStore.DAL;
 using WebStore.Domain;
+using WebStore.Domain.DTO.Catalog;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Services
 {
@@ -16,49 +20,42 @@ namespace WebStore.Services
         }
 
 
-        public IQueryable<Brand> GetBrands()
+        public IEnumerable<Brand> GetBrands()
         {
-            return _webStoreContext.Brands;
+            IQueryable<Brand> brands = _webStoreContext.Brands;
+            return brands;
         }
 
-        public IQueryable<Product> GetProducts(ProductFilter filter=null)
+        public IEnumerable<ProductDTO> GetProducts(ProductFilter filter=null)
         {
-            IQueryable<Product> products = _webStoreContext.Products;
+            IQueryable<Product> products = _webStoreContext.Products.Include(p=>p.Brand).Include(p=>p.Section);
 
             if (filter != null)
             {
                 if (filter.SectionId.HasValue)
-                    products = products.Where(product => product.SectionId.Equals(filter.SectionId));
+                    products = products.Where(product => product.Section.Id.Equals(filter.SectionId));
                 if (filter.BrandId.HasValue)
-                    products = products.Where(product => product.BrandId == filter.BrandId);
+                    products = products.Where(product => product.Brand.Id == filter.BrandId);
                 if (filter.ProductsIdList != null)
                     products = products.Where(product => filter.ProductsIdList.Contains(product.Id));
             }
 
-            return products;
+            return products.ToDTO();
         }
 
-        public IQueryable<Section> GetSections()
+        public IEnumerable<Section> GetSections()
         {
-            return _webStoreContext.Sections;
+            IQueryable<Section> sections = _webStoreContext.Sections;
+            return sections;
         }
 
-        public Product GetProductById(int id)
+        public ProductDTO GetProductById(int id)
         {
-            return GetProducts().FirstOrDefault(product => product.Id==id);
-
-            //вариант из методички, который сразу подтягивает модель бренда в товаре (.Include) и можно обойтись без доп.метода GetBrandById (но только если входной тип - DbSet)
-            //return _webStoreContext
-            //           .Products
-            //           .Include(p => p.Brand)
-            //           .Include(p => Section)
-            //           .FirstOrDefault(p => p.Id == id);
-
-        }
-
-        public Brand GetBrandById(int id)
-        {
-            return GetBrands().FirstOrDefault(brand => brand.Id==id);
+            return _webStoreContext.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Section)
+                .FirstOrDefault(p => p.Id == id)
+                .ToDTO();
         }
     }
 }

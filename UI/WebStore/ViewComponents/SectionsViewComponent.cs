@@ -16,14 +16,14 @@ namespace WebStore.ViewComponents
         {
             _catalogData = catalogData;
         }
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             List<SectionViewModel> sections = GetSections();
             return View(sections);
         }
         private List<SectionViewModel> GetSections()
         {
-            IQueryable<Section> allSections = _catalogData.GetSections();
+            IEnumerable<Section> allSections = _catalogData.GetSections();
             Section[] parentSections = allSections.Where(p => p.ParentId == null).ToArray();
             List<SectionViewModel> parentSectionsList = new List<SectionViewModel>();
 

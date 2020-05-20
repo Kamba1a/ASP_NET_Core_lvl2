@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebStore.DAL;
+using WebStore.Domain.DTO.Orders;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Entities.Identity;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Services
 {
@@ -20,38 +24,44 @@ namespace WebStore.Services
             _webStoreContext = webStoreContext;
         }
 
-        public IQueryable<Order> GetUserOrders(string username)
+        public IEnumerable<OrderDTO> GetUserOrders(string username)
         {
-            return _webStoreContext.Orders.Where(o => o.User.UserName == username);
+            IQueryable<Order> orders = _webStoreContext.Orders
+                .Include(o=>o.User)
+                .Include(o=>o.OrderItems).ThenInclude(i=>i.Product)
+                .Where(o => o.User.UserName == username);
+
+            return orders.ToDTO();
         }
 
-        public Order CreateOrder(OrderDetailsViewModel model, CartViewModel cart, string UserName)
+        public OrderDTO CreateOrder(CreateOrderModel orderModel, string UserName)
         {
             Order order = new Order()
             {
                 DateTime = DateTime.Now,
                 User = _userManager.FindByNameAsync(UserName).Result,
-                Address = model.Address,
-                Phone = model.Phone,
-                TotalPrice = cart.TotalPrice
+                Address = orderModel.OrderDetails.Address,
+                Phone = orderModel.OrderDetails.Phone,
+                TotalPrice = orderModel.TotalPrice
             };
 
-            using (var transaction = _webStoreContext.Database.BeginTransaction()) {
+            using (var transaction = _webStoreContext.Database.BeginTransaction())
+            {
 
                 _webStoreContext.Orders.Add(order);
 
-                foreach (var item in cart.CartItems)
+                foreach (var item in orderModel.OrderItems)
                 {
-                    Product product = _webStoreContext.Products.FirstOrDefault(p => p.Id == item.Product.Id);
+                    Product product = _webStoreContext.Products.FirstOrDefault(p => p.Id == item.ProductId);
 
                     if (product == null) throw new InvalidOperationException("Продукт не найден в базе");
 
                     OrderItem orderItem = new OrderItem()
                     {
                         Product = product,
-                        Price = item.Price,
+                        Price = product.Price,
                         ProductQuantity = item.Quantity,
-                        Order = order
+                        Order = order, 
                     };
                     _webStoreContext.OrderItems.Add(orderItem);
                 }
@@ -59,7 +69,7 @@ namespace WebStore.Services
                 transaction.Commit();
             }
 
-            return order;
+            return order.ToDTO();
         }
     }
 }

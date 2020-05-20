@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Linq;
+using WebStore.Domain.DTO.Orders;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
@@ -69,7 +72,17 @@ namespace WebStore.Controllers
 
             if (ModelState.IsValid)
             {
-                Order newOrder = _sqlOrderService.CreateOrder(model, _cartService.TransformCartToViewModel(), userName);
+                CreateOrderModel createOrderModel = new CreateOrderModel()
+                {
+                    OrderDetails = model,
+                    OrderItems = _cartService.TransformCartToViewModel().CartItems.Select(i=>new OrderItemDTO() 
+                    { 
+                        ProductId = i.Product.Id,
+                        Quantity = i.Quantity,
+                        Price = i.Price
+                    }).ToList()
+                };
+                OrderDTO newOrder = _sqlOrderService.CreateOrder(createOrderModel, userName);
                 _cartService.RemoveAllProductsFromCart();
                 return RedirectToAction("OrderConfirmed", new { orderNumber = newOrder.Id });
             }

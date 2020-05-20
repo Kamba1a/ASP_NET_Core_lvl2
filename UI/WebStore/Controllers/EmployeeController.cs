@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,9 +14,9 @@ namespace WebStore.Controllers
     [Authorize] //для всех методов контроллера требуется авторизация, если в методе не указано [AllowAnonymous]
     public class EmployeeController : Controller
     {
-        IitemData<EmployeeViewModel> _employees;
+        IEmployeesService _employees;
 
-        public EmployeeController(IitemData<EmployeeViewModel> employees)
+        public EmployeeController(IEmployeesService employees)
         {
             _employees = employees;
         }
@@ -24,7 +26,7 @@ namespace WebStore.Controllers
         [AllowAnonymous] //просматривать список могут все
         public IActionResult Employees()
         {
-            return View(_employees.GetAll());
+            return View(_employees.GetAll().ToView());
         }
 
         //GET: /<controller>/employees/details/{id}
@@ -32,7 +34,7 @@ namespace WebStore.Controllers
         [Authorize(Roles = "Admins, Users")] //для просмотра деталей о работнике нужна роль админа или юзера
         public IActionResult Details(int id)
         {
-            return View(_employees.GetById(id));
+            return View(_employees.GetById(id).ToView());
         }
 
         //GET: /<controller>/employees/edit/{id?}
@@ -40,30 +42,25 @@ namespace WebStore.Controllers
         public IActionResult Edit(int? id)
         {
             if (!id.HasValue) return View(new EmployeeViewModel());
-            EmployeeViewModel employee = _employees.GetById(id.Value);
+            Employee employee = _employees.GetById(id.Value);
             if (employee==null) return NotFound();
-            return View(employee);
+            return View(employee.ToView());
         }
 
         [HttpPost, Authorize(Roles = "Admins")]
-        public IActionResult Edit(EmployeeViewModel _employee)
+        public IActionResult Edit(EmployeeViewModel model)
         {
             //помимо использования атрибутов в модели, можно добавить проверку валидации в экшн-методе контроллера:
             //if (_employee.Age < 18 || _employee.Age > 99) ModelState.AddModelError("Age", "Некорректно указан возраст");
 
-            if (!ModelState.IsValid) return View(_employee); //валидация
+            if (!ModelState.IsValid) return View(model); //валидация
 
-            EmployeeViewModel employee = _employees.GetById(_employee.Id);
-            if (employee == null) _employees.AddNew(_employee);
-            else
-            {
-                employee.FirstName = _employee.FirstName;
-                employee.LastName = _employee.LastName;
-                employee.Patronymic = _employee.Patronymic;
-                employee.Age = _employee.Age;
-                employee.Position = _employee.Position;
-            }
-            _employees.Commit();
+            Employee employee = _employees.GetById(model.Id);
+
+            if (employee == null) _employees.Add(model.FromView());
+            else _employees.Edit(employee.Id, model.FromView());
+
+            _employees.SaveChanges();
             return RedirectToAction("Employees");
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Domain.DTO.Catalog;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
@@ -17,7 +18,7 @@ namespace WebStore.ViewComponents
             _catalogData = catalogData;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             List<BrandViewModel> brands = GetBrands();
             return View(brands);
@@ -25,7 +26,7 @@ namespace WebStore.ViewComponents
 
         private List<BrandViewModel> GetBrands()
         {
-            IQueryable<Brand> allBrands = _catalogData.GetBrands();
+            IEnumerable<Brand> allBrands = _catalogData.GetBrands();
             List<BrandViewModel> allBrandsList = allBrands.Select(brand => new BrandViewModel
             {
                 Id = brand.Id,
@@ -46,9 +47,9 @@ namespace WebStore.ViewComponents
         {
             int productCount = 0;
 
-            foreach (Product product in _catalogData.GetProducts())
+            foreach (ProductDTO product in _catalogData.GetProducts())
             {
-                if (product.BrandId == brandId) productCount = productCount + 1;
+                if (product.Brand.Id == brandId) productCount = productCount + 1;
             }
 
             return productCount;

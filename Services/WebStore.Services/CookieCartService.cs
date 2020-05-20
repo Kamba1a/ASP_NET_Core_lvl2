@@ -7,6 +7,7 @@ using WebStore.Domain;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Services
 {
@@ -111,17 +112,12 @@ namespace WebStore.Services
 
         public CartViewModel TransformCartToViewModel()
         {
-            List<ProductViewModel> products = _catalogData.GetProducts(new ProductFilter()      //сначала получаем список Product
-            { ProductsIdList = Cart.Items.Select(cartItem => cartItem.ProductId).ToList() })    //(фильтр по списку ID товаров из корзины)
-                    .Select(product => new ProductViewModel()                                   //сразу преобразовываем каждый Product в ProductViewModel
-                    {
-                        Id = product.Id,
-                        ImageUrl = product.ImageUrl,
-                        Name = product.Name,
-                        Order = product.Order,
-                        Price = product.Price,
-                        BrandName = product.Brand != null ? product.Brand.Name : string.Empty
-                    }).ToList();
+            IEnumerable<ProductViewModel> products = _catalogData.GetProducts(                      //сначала получаем список Products
+                new ProductFilter()
+                { 
+                    ProductsIdList = Cart.Items.Select(cartItem => cartItem.ProductId).ToList()     //(фильтр по списку ID товаров из корзины)
+                })
+                .FromDTO().ToView();                                                                //сразу преобразовываем каждый Product в ProductViewModel
 
             List<CartItemViewModel> cartItems = new List<CartItemViewModel>();
 
