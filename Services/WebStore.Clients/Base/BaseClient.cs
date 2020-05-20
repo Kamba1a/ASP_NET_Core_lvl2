@@ -10,7 +10,7 @@ namespace WebStore.Clients.Base
     /// <summary>
     /// базовый клиент
     /// </summary>
-    public abstract class BaseClient
+    public abstract class BaseClient: IDisposable
     {
         protected readonly string _ServiceAddress;
         protected readonly HttpClient _Client;
@@ -73,6 +73,25 @@ namespace WebStore.Clients.Base
         protected async Task<HttpResponseMessage> DeleteAsync(string url, CancellationToken Cancel = default)
         {
             return await _Client.DeleteAsync(url, Cancel);
+        }
+
+        //~BaseClient() => Dispose(false); //деструктор - в некоторых случаях бывает нужен, но в основном лучше не описывать, т.к. замедляет систему
+
+        /// <summary>
+        /// реализация IDisposable
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        private bool _Disposed;
+        protected virtual void Dispose(bool Disposing)
+        {
+            if (_Disposed || !Disposing) return;
+
+            _Disposed = true;
+            _Client.Dispose();
         }
     }
 }
