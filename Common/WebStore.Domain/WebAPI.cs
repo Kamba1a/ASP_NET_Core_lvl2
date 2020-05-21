@@ -24,9 +24,8 @@ namespace WebStore.Domain
         /// </summary>
         public const string Orders = "api/orders";
 
-        /// <summary>
-        /// класс в классе - для удобства, просто чтобы выделить вложенные в класс константы
-        /// </summary>
+
+        // класс в классе - для удобства, просто чтобы выделить вложенные в класс константы
         public static class Identity
             {
             /// <summary>

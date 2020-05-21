@@ -8,6 +8,7 @@ using WebStore.Interfaces.Services;
 
 namespace WebStore.ServiceHosting.Controllers
 {
+    /// <summary>Контроллер заказов</summary>
     [Route(WebAPI.Orders)]
     [ApiController]
     public class OrdersApiController : ControllerBase, ISqlOrderService
@@ -22,6 +23,10 @@ namespace WebStore.ServiceHosting.Controllers
             _Logger = Logger;
         }
 
+        /// <summary>Создание нового заказа для указанного пользователя</summary>
+        /// <param name="UserName">Имя пользователя для которого оформляется заказ</param>
+        /// <param name="createOrderModel">Структура формируемого заказа</param>
+        /// <returns>Структура сформированного заказа</returns>
         [HttpPost("createOrder/{username}")]
         public OrderDTO CreateOrder([FromBody]CreateOrderModel createOrderModel, string UserName)
         {
@@ -41,6 +46,9 @@ namespace WebStore.ServiceHosting.Controllers
             //return _sqlOrderService.CreateOrder(createOrderModel, UserName);
         }
 
+        /// <summary>Получить все заказы пользователя</summary>
+        /// <param name="username">Имя пользователя</param>
+        /// <returns>Возвращает список заказов указанного пользователя</returns>
         [HttpGet("orders/{username}")]
         public IEnumerable<OrderDTO> GetUserOrders(string username)
         {
