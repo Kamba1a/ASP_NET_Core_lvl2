@@ -59,24 +59,24 @@ namespace WebStore.ServiceHosting
 
             services.AddControllers();
 
-            //настройка Swagger
+            //РЅР°СЃС‚СЂРѕР№РєР° Swagger
             services.AddSwaggerGen(opt =>
             {
-                //заголовок
+                //Р·Р°РіРѕР»РѕРІРѕРє
                 opt.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.API", Version = "v1" });
 
-                //расположене файлов документации, из которых swagger будет брать описание
+                //СЂР°СЃРїРѕР»РѕР¶РµРЅРµ С„Р°Р№Р»РѕРІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё, РёР· РєРѕС‚РѕСЂС‹С… swagger Р±СѓРґРµС‚ Р±СЂР°С‚СЊ РѕРїРёСЃР°РЅРёРµ
                 const string domain_doc_xml = "WebStore.Domain.xml";
                 const string web_api_doc_xml = "WebStore.ServiceHosting.xml";
                 const string debug_path = @"bin\debug\netcoreapp3.1";
 
-                //файл документации из ServiceHosting просто подключаем
+                //С„Р°Р№Р» РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РёР· ServiceHosting РїСЂРѕСЃС‚Рѕ РїРѕРґРєР»СЋС‡Р°РµРј
                 opt.IncludeXmlComments(web_api_doc_xml);
                 
-                //файл документации из Domain проверяем где находится
-                if (File.Exists(domain_doc_xml))    //если там же, где и exe-файл, то просто подключаем (если будет развернут на хостинге)
+                //С„Р°Р№Р» РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РёР· Domain РїСЂРѕРІРµСЂСЏРµРј РіРґРµ РЅР°С…РѕРґРёС‚СЃСЏ
+                if (File.Exists(domain_doc_xml))    //РµСЃР»Рё С‚Р°Рј Р¶Рµ, РіРґРµ Рё exe-С„Р°Р№Р», С‚Рѕ РїСЂРѕСЃС‚Рѕ РїРѕРґРєР»СЋС‡Р°РµРј (РµСЃР»Рё Р±СѓРґРµС‚ СЂР°Р·РІРµСЂРЅСѓС‚ РЅР° С…РѕСЃС‚РёРЅРіРµ)
                     opt.IncludeXmlComments(domain_doc_xml);
-                else if (File.Exists(Path.Combine(debug_path, domain_doc_xml))) //если в режиме отладки, то указываем путь в папку debug
+                else if (File.Exists(Path.Combine(debug_path, domain_doc_xml))) //РµСЃР»Рё РІ СЂРµР¶РёРјРµ РѕС‚Р»Р°РґРєРё, С‚Рѕ СѓРєР°Р·С‹РІР°РµРј РїСѓС‚СЊ РІ РїР°РїРєСѓ debug
                     opt.IncludeXmlComments(Path.Combine(debug_path, domain_doc_xml));
             });
 
@@ -95,13 +95,13 @@ namespace WebStore.ServiceHosting
 
             app.UseAuthorization();
 
-            //подключение Swagger
+            //РїРѕРґРєР»СЋС‡РµРЅРёРµ Swagger
             app.UseSwagger();
             app.UseSwaggerUI(opt =>
             {
-                //конечная точка, по которой будет доступна техническая документация по WebAPI (может быть использована для авто генерации клиентов)
-                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "WebStore.API"); //путь, название
-                opt.RoutePrefix = string.Empty; //адрес, по которому доступен UI (Empty - интерфейс будет виден сразу)
+                //РєРѕРЅРµС‡РЅР°СЏ С‚РѕС‡РєР°, РїРѕ РєРѕС‚РѕСЂРѕР№ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРЅР° С‚РµС…РЅРёС‡РµСЃРєР°СЏ РґРѕРєСѓРјРµРЅС‚Р°С†РёСЏ РїРѕ WebAPI (РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅР° РґР»СЏ Р°РІС‚Рѕ РіРµРЅРµСЂР°С†РёРё РєР»РёРµРЅС‚РѕРІ)
+                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "WebStore.API"); //РїСѓС‚СЊ, РЅР°Р·РІР°РЅРёРµ
+                opt.RoutePrefix = string.Empty; //Р°РґСЂРµСЃ, РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РґРѕСЃС‚СѓРїРµРЅ UI (Empty - РёРЅС‚РµСЂС„РµР№СЃ Р±СѓРґРµС‚ РІРёРґРµРЅ СЃСЂР°Р·Сѓ)
             });
 
 
