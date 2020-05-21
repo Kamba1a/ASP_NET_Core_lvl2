@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
-using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
 using WebStore.Services;
 using WebStore.Services.Data;
@@ -57,6 +58,28 @@ namespace WebStore.ServiceHosting
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddControllers();
+
+            //настройка Swagger
+            services.AddSwaggerGen(opt =>
+            {
+                //заголовок
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.API", Version = "v1" });
+
+                //расположене файлов документации, из которых swagger будет брать описание
+                const string domain_doc_xml = "WebStore.Domain.xml";
+                const string web_api_doc_xml = "WebStore.ServiceHosting.xml";
+                const string debug_path = @"bin\debug\netcoreapp3.1";
+
+                //файл документации из ServiceHosting просто подключаем
+                opt.IncludeXmlComments(web_api_doc_xml);
+                
+                //файл документации из Domain проверяем где находится
+                if (File.Exists(domain_doc_xml))    //если там же, где и exe-файл, то просто подключаем (если будет развернут на хостинге)
+                    opt.IncludeXmlComments(domain_doc_xml);
+                else if (File.Exists(Path.Combine(debug_path, domain_doc_xml))) //если в режиме отладки, то указываем путь в папку debug
+                    opt.IncludeXmlComments(Path.Combine(debug_path, domain_doc_xml));
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer dbInitializer)
@@ -71,6 +94,16 @@ namespace WebStore.ServiceHosting
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //подключение Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(opt =>
+            {
+                //конечная точка, по которой будет доступна техническая документация по WebAPI (может быть использована для авто генерации клиентов)
+                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "WebStore.API"); //путь, название
+                opt.RoutePrefix = string.Empty; //адрес, по которому доступен UI (Empty - интерфейс будет виден сразу)
+            });
+
 
             app.UseEndpoints(endpoints =>
             {
