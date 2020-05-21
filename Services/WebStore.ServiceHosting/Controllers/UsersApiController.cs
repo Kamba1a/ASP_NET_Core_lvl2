@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Domain.DTO.Identity;
@@ -22,10 +24,12 @@ namespace WebStore.ServiceHosting.Controllers
         //все методы, где передается модель пользователя, будут POST - для получения данных только из тела сообщения (безопасность)
 
         private readonly UserStore<User, Role, WebStoreContext> _UserStore;
+        ILogger<UsersApiController> _Logger; //для примера логирования
 
-        public UsersApiController(WebStoreContext db)
+        public UsersApiController(WebStoreContext db, ILogger<UsersApiController> Logger)
         {
             _UserStore = new UserStore<User, Role, WebStoreContext>(db);
+            _Logger = Logger;
         }
 
         [HttpGet("all")]
@@ -61,7 +65,20 @@ namespace WebStore.ServiceHosting.Controllers
 
         // создает пользователя
         [HttpPost("User")]
-        public async Task<bool> CreateAsync([FromBody] User user) => (await _UserStore.CreateAsync(user)).Succeeded;
+        public async Task<bool> CreateAsync([FromBody] User user) //=>(await _UserStore.CreateAsync(user)).Succeeded;
+        {
+            var creation_user_result = await _UserStore.CreateAsync(user);
+
+            //пример логирования
+            if (creation_user_result.Succeeded)
+                _Logger.LogInformation("Новый пользователь {0} создан успешно", user.UserName);
+            else
+                _Logger.LogWarning("Ошибка при создании пользователя {0}:{1}",
+                    user.UserName,
+                    string.Join(",", creation_user_result.Errors.Select(error => error.Description)));
+
+            return creation_user_result.Succeeded;
+        }
 
         // сохраняет изменения пользователя
         [HttpPut("User")]
