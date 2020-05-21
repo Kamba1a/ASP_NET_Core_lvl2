@@ -9,11 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Clients.Catalog;
 using WebStore.Clients.Employees;
+using WebStore.Clients.Identity;
 using WebStore.Clients.Orders;
 using WebStore.Clients.Values;
 using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
-using WebStore.Domain.Models;
 using WebStore.Interfaces.Api;
 using WebStore.Interfaces.Services;
 using WebStore.Services;
@@ -35,14 +35,32 @@ namespace WebStore
 
             //(options => options.Filters.Add(new Example_SimpleActionFilter())) //для добавления фильтра ко всем методам всех контроллеров
 
-            services.AddDbContext<DAL.WebStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"))); //строка подключения SQL
+            //строка подключения к БД (для реализации WebAPI БД отключена от основного приложения)
+            //services.AddDbContext<DAL.WebStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
 
 
             //AUTHENTICATION AND AUTHORIZATION//
 
             services.AddIdentity<User, Role>()
-               .AddEntityFrameworkStores<WebStoreContext>()
+               //.AddEntityFrameworkStores<WebStoreContext>() //отключение Identity от БД в основном приложении (реализация WebAPI)
                .AddDefaultTokenProviders();
+
+            #region WebAPI Identity clients stores
+            //подключаем для работы Identity после отключения БД от основного приложения
+
+            services
+               .AddTransient<IUserStore<User>, UsersClient>()
+               .AddTransient<IUserPasswordStore<User>, UsersClient>()
+               .AddTransient<IUserEmailStore<User>, UsersClient>()
+               .AddTransient<IUserPhoneNumberStore<User>, UsersClient>()
+               .AddTransient<IUserTwoFactorStore<User>, UsersClient>()
+               .AddTransient<IUserLockoutStore<User>, UsersClient>()
+               .AddTransient<IUserClaimStore<User>, UsersClient>()
+               .AddTransient<IUserLoginStore<User>, UsersClient>();
+            services
+               .AddTransient<IRoleStore<Role>, RolesClient>();
+
+            #endregion
 
             services.Configure<IdentityOptions>(options =>      //настройка требований к паролю, логину итд (необязательно)
             {
@@ -92,20 +110,22 @@ namespace WebStore
             //services.AddScoped<ICatalogData, SqlCatalogData>(); //после подключения БД (и стало AddScoped)
             services.AddScoped<ICatalogData, CatalogClient>(); //после реализации WebAPI
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //для работы служебного класса HttpContextAccessor также нужно прописывать зависимость
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //для работы служебного класса HttpContextAccessor (используется в CookieCartService) также нужно прописывать зависимость
             services.AddScoped<ICartService, CookieCartService>(); //корзина - AddScoped!
 
             //services.AddScoped<ISqlOrderService, SqlOrderService>();
             services.AddScoped<ISqlOrderService, OrdersClient>();
 
-            services.AddTransient<DbInitializer>();
+            //регистрация класса для наполнения БД начальными данными (перенесено в Webstore.ServiceHosting после отключения БД от основного приложения)
+            //services.AddTransient<DbInitializer>();
 
             services.AddScoped<IValueServices, ValuesClient>(); //регистрация клиента как сервис
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer db) //здесь прописываем, что и как будет использоваться (связано с сервисами)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, DbInitializer db*/) //здесь прописываем, что и как будет использоваться (связано с сервисами)
         {
-            db.Initialize();
+            //наполнение БД начальными данными (перенесено в Webstore.ServiceHosting после отключения БД от основного приложения)
+            //db.Initialize();
 
             if (env.IsDevelopment())
             {

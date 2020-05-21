@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using WebStore.Domain.Entities.Identity;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
 using WebStore.Services;
+using WebStore.Services.Data;
 
 namespace WebStore.ServiceHosting
 {
@@ -27,6 +29,7 @@ namespace WebStore.ServiceHosting
         {
             services.AddDbContext<DAL.WebStoreContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, Role>().AddEntityFrameworkStores<WebStoreContext>().AddDefaultTokenProviders();
+            services.AddTransient<DbInitializer>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -51,11 +54,15 @@ namespace WebStore.ServiceHosting
             services.AddScoped<ICartService, CookieCartService>();
             services.AddScoped<ISqlOrderService, SqlOrderService>();
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer dbInitializer)
         {
+            dbInitializer.Initialize();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
