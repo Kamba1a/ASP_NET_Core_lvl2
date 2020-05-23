@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Interfaces", "Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Services", "Services\WebStore.Services\WebStore.Services.csproj", "{F68665BE-4863-477D-B3B5-94636D61AEF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.Clients", "Services\WebStore.Clients\WebStore.Clients.csproj", "{C8196B11-F5E1-4CB1-B034-D499C8863581}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Clients", "Services\WebStore.Clients\WebStore.Clients.csproj", "{C8196B11-F5E1-4CB1-B034-D499C8863581}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.Logger", "Common\WebStore.Logger\WebStore.Logger.csproj", "{7D187DCC-0AF4-4ADC-9EF6-54C447D31C26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{C8196B11-F5E1-4CB1-B034-D499C8863581}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8196B11-F5E1-4CB1-B034-D499C8863581}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8196B11-F5E1-4CB1-B034-D499C8863581}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D187DCC-0AF4-4ADC-9EF6-54C447D31C26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D187DCC-0AF4-4ADC-9EF6-54C447D31C26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D187DCC-0AF4-4ADC-9EF6-54C447D31C26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D187DCC-0AF4-4ADC-9EF6-54C447D31C26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{56C12E15-545B-4A26-9A81-05107B1E66C3} = {76DC8D87-37A9-4AED-9718-1BD00651220A}
 		{F68665BE-4863-477D-B3B5-94636D61AEF8} = {76DC8D87-37A9-4AED-9718-1BD00651220A}
 		{C8196B11-F5E1-4CB1-B034-D499C8863581} = {76DC8D87-37A9-4AED-9718-1BD00651220A}
+		{7D187DCC-0AF4-4ADC-9EF6-54C447D31C26} = {2D0620C6-A381-4B64-AAE1-A80CCFDD94E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {10A9EB1B-3264-4DA5-A150-D1580837E30B}
