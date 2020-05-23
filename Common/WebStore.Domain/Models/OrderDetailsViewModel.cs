@@ -2,26 +2,18 @@
 
 namespace WebStore.Domain.Models
 {
-    /// <summary>
-    /// Содержит данные для заказа
-    /// </summary>
+    /// <summary>Модель информации о заказе</summary>
     public class OrderDetailsViewModel
     {
-        /// <summary>
-        /// имя пользователя
-        /// </summary>
+        /// <summary>Имя</summary>
         [Required]
         public string Name { get; set; }
 
-        /// <summary>
-        /// адрес доставки
-        /// </summary>
+        /// <summary>Адрес доставки</summary>
         [Required]
         public string Address { get; set; }
 
-        /// <summary>
-        /// телефон для связи
-        /// </summary>
+        /// <summary>Номер телефона для связи</summary>
         [Required, DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
     }
