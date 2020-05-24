@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Json;
+using System;
 
 namespace WebStore
 {
@@ -14,7 +18,7 @@ namespace WebStore
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureLogging((hostBuilderContext, loggingBuilder)=>    //пример управления конфигурацией системы логгирования в коде (добавление провайдеров и фильтров сообщений)
+                .ConfigureLogging((hostBuilderContext, loggingBuilder) =>    //пример управления конфигурацией системы логгирования в коде (добавление провайдеров и фильтров сообщений)
                     {
                         //loggingBuilder.ClearProviders();  //очистить все провайдеры
                         //loggingBuilder.AddProvider(new ConsoleLoggerProvider(/*конфигурация провайдера*/));   //добавить провайдер
@@ -29,6 +33,16 @@ namespace WebStore
                         //});
                     })
                 .ConfigureWebHostDefaults(builder =>
-                    builder.UseStartup<Startup>());
+                    builder.UseStartup<Startup>())
+                .UseSerilog((hostBuilderContext, loggerConfiguration) => // пример конфигурации библиотеки для логгирования Serilog в коде
+                        loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration) //считывание конфигурации из конфигурации hostBuilderContext
+                       .MinimumLevel.Debug()    //минимальный уровень ведения журнала
+                       .MinimumLevel.Override("Microsoft", LogEventLevel.Error) //переопределение минимального уровня для конкретного пространства имен 
+                       .Enrich.FromLogContext() //добавление в процесс логгирования информацию из контекста входящего запроса
+                       .WriteTo.Console(        //вести логи в консоли 
+                            outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}]{SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}") //формат записи логов
+                       .WriteTo.RollingFile($@".\Logs\WebStore[{DateTime.Now:yyyy-MM-ddTHH-mm-ss}].log")    //вести логи в указанном файле
+                       .WriteTo.File(new JsonFormatter(",", true), $@".\Logs\WebStore[{DateTime.Now:yyyy-MM-ddTHH-mm-ss}].log.json")); //вести логи в файле формата json
+                       //.WriteTo.Seq("http://localhost:5341/"));     //ведение логов на сервере Seq по указанной Listen Uri (сайт https://datalust.co/seq)
     }
 }
