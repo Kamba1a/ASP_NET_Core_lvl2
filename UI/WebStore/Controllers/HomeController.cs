@@ -25,11 +25,6 @@ namespace WebStore.Controllers
             return View();
         }
 
-        // GET: /<controller>/Cart
-        public IActionResult Cart()
-        {
-            return View();
-        }
 
         // GET: /<controller>/Checkout
         public IActionResult Checkout()
@@ -49,6 +44,21 @@ namespace WebStore.Controllers
             return View();
         }
 
+        /// <summary>Метод выбрасывает исключение ApplicationException</summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IActionResult Throw(string id) => throw new ApplicationException(id); //для тестового вызова ошибки
+
+        //метод для примера модульного тестирования
+        public IActionResult ErrorStatus(string Code)
+        {
+            switch (Code)
+            {
+                default:
+                    return Content($"Error code:{Code}");
+                case "404":
+                    return RedirectToAction("NotFound404", "Home");
+            }
+        }
     }
 }
