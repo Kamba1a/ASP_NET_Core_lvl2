@@ -3,21 +3,21 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using WebStore.Clients.Catalog;
 using WebStore.Clients.Employees;
 using WebStore.Clients.Identity;
 using WebStore.Clients.Orders;
 using WebStore.Clients.Values;
-using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
+using WebStore.Infrastructure.Middleware;
 using WebStore.Interfaces.Api;
 using WebStore.Interfaces.Services;
+using WebStore.Logger;
 using WebStore.Services;
-using WebStore.Services.Data;
 
 namespace WebStore
 {
@@ -122,8 +122,10 @@ namespace WebStore
             services.AddScoped<IValueServices, ValuesClient>(); //регистрация клиента как сервис
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, DbInitializer db*/) //здесь прописываем, что и как будет использоваться (связано с сервисами)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory log/*, DbInitializer db*/) //здесь прописываем, что и как будет использоваться (связано с сервисами)
         {
+            log.AddLog4Net(); //подключение системы логгирования с помощью созданной нами инфраструктуры 
+
             //наполнение БД начальными данными (перенесено в Webstore.ServiceHosting после отключения БД от основного приложения)
             //db.Initialize();
 
@@ -140,6 +142,8 @@ namespace WebStore
 
             app.UseAuthentication(); //подключаем аутентификацию (после UseStaticFiles для возможности анонимного доступа к ресурсам)
             app.UseAuthorization(); //подключаем авторизацию (между UseRouting и UseEndpoints), нужно подключать только если используются атрибуты [Authorize]
+
+            app.UseMiddleware<ErrorHandlingMiddleware>(); //подключение собственного промежуточного ПО, которое перехватывает ошибки, возникающие ниже по конвейеру запросов
 
             app.UseEndpoints(endpoints =>
             {
