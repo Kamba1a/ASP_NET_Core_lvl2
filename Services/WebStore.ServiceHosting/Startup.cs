@@ -54,7 +54,8 @@ namespace WebStore.ServiceHosting
             services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
 
             services.AddScoped<ICatalogData, SqlCatalogData>();
-            services.AddScoped<ICartService, CookieCartService>();
+            services.AddScoped<ICartStore, CookiesCartStore>();
+            services.AddScoped<ICartService, CartService>();
             services.AddScoped<ISqlOrderService, SqlOrderService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

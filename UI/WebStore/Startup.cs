@@ -110,8 +110,9 @@ namespace WebStore
             //services.AddScoped<ICatalogData, SqlCatalogData>(); //после подключения БД (и стало AddScoped)
             services.AddScoped<ICatalogData, CatalogClient>(); //после реализации WebAPI
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //для работы служебного класса HttpContextAccessor (используется в CookieCartService) также нужно прописывать зависимость
-            services.AddScoped<ICartService, CookieCartService>(); //корзина - AddScoped!
+            services.AddScoped<ICartService, CartService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //для работы служебного класса HttpContextAccessor (используется в CookieCartStore) также нужно прописывать зависимость
+            services.AddScoped<ICartStore, CookiesCartStore>();
 
             //services.AddScoped<ISqlOrderService, SqlOrderService>();
             services.AddScoped<ISqlOrderService, OrdersClient>();
