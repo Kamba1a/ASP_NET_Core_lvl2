@@ -13,8 +13,14 @@ namespace WebStore.Controllers
             return View();
         }
 
-        // GET: /<controller>/Checkout
-        public IActionResult Checkout()
+        // GET: /<controller>/CartExample
+        public IActionResult CartExample()
+        {
+            return View();
+        }
+
+        // GET: /<controller>/CheckoutExample
+        public IActionResult CheckoutExample()
         {
             return View();
         }
