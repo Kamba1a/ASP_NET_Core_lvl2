@@ -13,19 +13,6 @@ namespace WebStore.Controllers
             return View();
         }
 
-        // GET: /<controller>/Blog
-        public IActionResult Blog()
-        {
-            return View();
-        }
-
-        // GET: /<controller>/BlogSingle
-        public IActionResult BlogSingle()
-        {
-            return View();
-        }
-
-
         // GET: /<controller>/Checkout
         public IActionResult Checkout()
         {
