@@ -62,7 +62,7 @@
                 <div class="col-sm-6">
                     <div class="shop-menu pull-right">
                         <ul class="nav navbar-nav">
-                            <li><a asp-controller="home" asp-action="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
+                            <li><a asp-controller="home" asp-action="Checkout"><i class="fa fa-crosshairs"></i> CheckoutExample</a></li>
                             <li><a asp-controller="Cart" asp-action="Cart"><i class="fa fa-shopping-cart"></i> Корзина</a></li>
                             @if (User.Identity.IsAuthenticated)
                             {
@@ -98,13 +98,13 @@
                     </div>
                     <div class="mainmenu pull-left">
                         <ul class="nav navbar-nav collapse navbar-collapse">
-                            <li><a asp-controller="home" asp-action="index" class="active">Главная</a></li>
-                            <li><a asp-controller="Catalog" asp-action="Shop">Магазин</a></li>
+                            <li><a asp-controller="home" asp-action="index" class="@IsActive("Home", "Index")">Главная</a></li>
+                            <li><a asp-controller="Catalog" asp-action="Shop" class="@IsActive("Catalog", "Shop")">Магазин</a></li>
                             <li class="dropdown">
                                 <a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                 <ul role="menu" class="sub-menu">
                                     <li><a asp-controller="Catalog" asp-action="Shop">Shop</a></li>
-                                    <li><a asp-controller="home" asp-action="Checkout">Checkout</a></li>
+                                    <li><a asp-controller="home" asp-action="Checkout">CheckoutExample</a></li>
                                     <li><a asp-controller="home" asp-action="Cart">CartExample</a></li>
                                 </ul>
                             </li>
@@ -116,9 +116,9 @@
                                 </ul>
                             </li>
                             <li><a asp-controller="home" asp-action="NotFound404">404</a></li>
-                            <li><a asp-controller="home" asp-action="ContactUs">Contact</a></li>
-                            <li><a asp-controller="Employee" asp-action="Employees">Employees</a></li>
-                            <li><a asp-controller="WebAPITest" asp-action="Index">WebAPI</a></li>
+                            <li><a asp-controller="home" asp-action="ContactUs" class="@IsActive("Home", "ContactUs")">Contact</a></li>
+                            <li><a asp-controller="Employee" asp-action="Employees" class="@IsActive("Employee", "Employees")">Employees</a></li>
+                            <li><a asp-controller="WebAPITest" asp-action="Index" class="@IsActive("WebAPITest", "Index")">WebAPI</a></li>
                         </ul>
                     </div>
                 </div>
@@ -131,3 +131,14 @@
         </div>
     </div><!--/header-bottom-->
 </header><!--/header-->
+
+
+@functions{ //Раздел для методов, которые будут выполняться во время загрузки страницы
+
+string IsActive(string controllerName, string actionName) //для подсветки активных ссылок
+{
+    if (Equals(controllerName, ViewContext.RouteData.Values["Controller"]) && Equals(actionName, ViewContext.RouteData.Values["Action"])) return "active";
+    else return null;
+}
+
+}
