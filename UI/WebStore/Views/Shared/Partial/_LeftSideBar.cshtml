@@ -1,10 +1,12 @@
 ﻿<div class="left-sidebar">
 
-    <vc:Sections></vc:Sections> @*требует подключения во _ViewImports: @addTagHelper *, WebStore*@
-    <vc:Brands></vc:Brands>
+    @*для использования тегов vc требуется подключение во _ViewImports: @addTagHelper *, WebStore*@
+    <vc:Sections section-id="@Context.Request.Query["sectionId"]" /> @*если во входящем запросе есть указанный параметр, то передает его вью-компоненту*@
+    <vc:Brands brand-id="@Context.Request.Query["brandId"]" />  @*такой параметр может передваться в случае нажатия ссылки компонента (для метода Shop в CatalogController)*@
+
     @*аналогичные записи:
-    @await Component.InvokeAsync("Sections")
-    @await Component.InvokeAsync("Brands")*@
+        @await Component.InvokeAsync("Sections")
+        @await Component.InvokeAsync("Brands")*@
 
     <div class="price-range">
         <!--price-range-->

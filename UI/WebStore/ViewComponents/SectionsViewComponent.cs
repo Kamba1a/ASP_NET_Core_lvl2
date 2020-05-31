@@ -11,17 +11,26 @@ namespace WebStore.ViewComponents
     public class SectionsViewComponent : ViewComponent
     {
         private readonly ICatalogData _catalogData;
+        private int? _currentParentSectionId;
 
         public SectionsViewComponent(ICatalogData catalogData)
         {
             _catalogData = catalogData;
         }
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string sectionId)
         {
-            List<SectionViewModel> sections = GetSections();
-            return View(sections);
+            int? currentSectionId = int.TryParse(sectionId, out int id) ? id : (int?)null;
+
+            List<SectionViewModel> sections = GetSections(currentSectionId);
+
+            return View(new SectionCompleteViewModel
+            {
+                Sections = sections,
+                CurrentSectionId = currentSectionId,
+                ParentSectionId = _currentParentSectionId
+            });
         }
-        private List<SectionViewModel> GetSections()
+        private List<SectionViewModel> GetSections(int? currentSectionId)
         {
             IEnumerable<Section> allSections = _catalogData.GetSections();
             Section[] parentSections = allSections.Where(p => p.ParentId == null).ToArray();
@@ -44,6 +53,8 @@ namespace WebStore.ViewComponents
 
                 foreach (Section child in childSections)
                 {
+                    if (child.Id == currentSectionId) _currentParentSectionId = parent.Id;
+
                     parent.ChildSections.Add(new SectionViewModel
                     {
                         Id = child.Id,
