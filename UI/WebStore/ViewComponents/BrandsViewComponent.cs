@@ -28,7 +28,7 @@ namespace WebStore.ViewComponents
 
         private List<BrandViewModel> GetBrands(int? currentBrandId)
         {
-            IEnumerable<Brand> allBrands = _catalogData.GetBrands();
+            IEnumerable<BrandDTO> allBrands = _catalogData.GetBrands();
             List<BrandViewModel> allBrandsList = allBrands.Select(brand => new BrandViewModel
             {
                 Id = brand.Id,

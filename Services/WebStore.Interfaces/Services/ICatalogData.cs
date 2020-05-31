@@ -5,33 +5,33 @@ using WebStore.Domain.Entities;
 
 namespace WebStore.Interfaces.Services
 {
-    /// <summary>
-    /// Интерфейс для работы с товарами
-    /// </summary>
+    /// <summary>Сервис для работы с каталогом товаров</summary>
     public interface ICatalogData
     {
-        /// <summary>
-        /// Перечень секций
-        /// </summary>
+        /// <summary>Коллекция секций</summary>
         /// <returns></returns>
-        IEnumerable<Section> GetSections();
+        IEnumerable<SectionDTO> GetSections();
 
-        /// <summary>
-        /// Перечень брендов
-        /// </summary>
+        /// <summary>Получить секцию по идентификатору</summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        IEnumerable<Brand> GetBrands();
+        SectionDTO GetSectionById(int id);
 
-        /// <summary>
-        /// Перечень товаров
-        /// </summary>
+        /// <summary>Коллекция брендов</summary>
+        /// <returns></returns>
+        IEnumerable<BrandDTO> GetBrands();
+
+        /// <summary>Получить бренд по идентификатору</summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        BrandDTO GetBrandById(int id);
+
+        /// <summary>Коллекция товаров</summary>
         /// <param name="filter">Фильтр товаров</param>
         /// <returns></returns>
         IEnumerable<ProductDTO> GetProducts(ProductFilter filter=null);
 
-        /// <summary>
-        /// Товар по ID
-        /// </summary>
+        /// <summary>Получить товар по идентификатору</summary>
         /// <param name="id"></param>
         /// <returns></returns>
         ProductDTO GetProductById(int id);

@@ -20,10 +20,10 @@ namespace WebStore.Services
         }
 
 
-        public IEnumerable<Brand> GetBrands()
+        public IEnumerable<BrandDTO> GetBrands()
         {
             IQueryable<Brand> brands = _webStoreContext.Brands;
-            return brands;
+            return brands.ToDTO();
         }
 
         public IEnumerable<ProductDTO> GetProducts(ProductFilter filter=null)
@@ -43,10 +43,10 @@ namespace WebStore.Services
             return products.ToDTO();
         }
 
-        public IEnumerable<Section> GetSections()
+        public IEnumerable<SectionDTO> GetSections()
         {
             IQueryable<Section> sections = _webStoreContext.Sections;
-            return sections;
+            return sections.ToDTO();
         }
 
         public ProductDTO GetProductById(int id)
@@ -55,6 +55,20 @@ namespace WebStore.Services
                 .Include(p => p.Brand)
                 .Include(p => p.Section)
                 .FirstOrDefault(p => p.Id == id)
+                .ToDTO();
+        }
+
+        public SectionDTO GetSectionById(int id)
+        {
+            return _webStoreContext.Sections
+                .FirstOrDefault(s => s.Id==id)
+                .ToDTO();
+        }
+
+        public BrandDTO GetBrandById(int id)
+        {
+            return _webStoreContext.Brands
+                .FirstOrDefault(b => b.Id == id)
                 .ToDTO();
         }
     }

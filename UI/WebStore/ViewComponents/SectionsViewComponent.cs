@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Domain.DTO.Catalog;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
@@ -32,11 +33,11 @@ namespace WebStore.ViewComponents
         }
         private List<SectionViewModel> GetSections(int? currentSectionId)
         {
-            IEnumerable<Section> allSections = _catalogData.GetSections();
-            Section[] parentSections = allSections.Where(p => p.ParentId == null).ToArray();
+            IEnumerable<SectionDTO> allSections = _catalogData.GetSections();
+            SectionDTO[] parentSections = allSections.Where(p => p.ParentId == null).ToArray();
             List<SectionViewModel> parentSectionsList = new List<SectionViewModel>();
 
-            foreach (Section parent in parentSections)
+            foreach (SectionDTO parent in parentSections)
             {
                 parentSectionsList.Add(new SectionViewModel
                 {
@@ -49,9 +50,9 @@ namespace WebStore.ViewComponents
 
             foreach (SectionViewModel parent in parentSectionsList)
             {
-                IEnumerable<Section> childSections = allSections.Where(c => c.ParentId == parent.Id);
+                IEnumerable<SectionDTO> childSections = allSections.Where(c => c.ParentId == parent.Id);
 
-                foreach (Section child in childSections)
+                foreach (SectionDTO child in childSections)
                 {
                     if (child.Id == currentSectionId) _currentParentSectionId = parent.Id;
 
