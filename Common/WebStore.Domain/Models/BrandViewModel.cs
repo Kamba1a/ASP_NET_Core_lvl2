@@ -7,11 +7,12 @@ namespace WebStore.Domain.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        /// <summary>
-        /// Количество товаров бренда
-        /// </summary>
+        /// <summary>Количество товаров в бренде</summary>
         public int ProductsCount { get; set; }
 
         public int Order { get; set; }
+
+        /// <summary>Выбран ли бренд в представлении</summary>
+        public bool CurrentBrandId { get; set; }
     }
 }
