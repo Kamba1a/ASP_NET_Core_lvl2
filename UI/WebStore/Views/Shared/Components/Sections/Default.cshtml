@@ -21,7 +21,8 @@
                         <ul>
                             @foreach (SectionViewModel childSection in parentSection.ChildSections)
                             {
-                                <li style="@(childSection.Id == Model.CurrentSectionId ? "text-decoration: underline" : null)">
+                                //<li style="@(childSection.Id == Model.CurrentSectionId ? "text-decoration: underline" : null)>"
+                                <li @(childSection.Id == Model.CurrentSectionId ? "class=active" : null)>
                                     <a asp-controller="Catalog" asp-action="Shop" asp-route-sectionId="@childSection.Id">
                                         @childSection.Name
                                     </a>

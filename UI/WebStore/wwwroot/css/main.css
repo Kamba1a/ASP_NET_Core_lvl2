@@ -2521,5 +2521,5 @@ h2.title {
 }
 
 .panel-body ul li.active {
-    text-decoration: underline
-} /*не работает почему-то*/
+    text-decoration: underline;
+}
