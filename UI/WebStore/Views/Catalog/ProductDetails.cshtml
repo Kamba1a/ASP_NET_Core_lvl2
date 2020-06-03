@@ -6,6 +6,10 @@
     int quantity = 1;
 }
 
+<div class="container">
+    <vc:bread-crumbs />
+</div>
+
 <section>
     <div class="container">
         <div class="row">
@@ -18,7 +22,7 @@
                     <!--product-details-->
                     <div class="col-sm-5">
                         <div class="view-product">
-                            <img src="~/images/shop/@Model.ImageUrl" alt="" />                         @*[OK]ссылка на изображение товара*@ 
+                            <img src="~/images/shop/@Model.ImageUrl" alt="" />                         @*[OK]ссылка на изображение товара*@
                             <h3>ZOOM</h3>
                         </div>
                         @await Html.PartialAsync("Partial/_CarouselSlide")

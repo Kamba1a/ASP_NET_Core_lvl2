@@ -1,27 +1,32 @@
-﻿@model IEnumerable<SectionViewModel>
+﻿@model SectionCompleteViewModel
 
 <h2>Категории</h2>
 <div class="panel-group category-products" id="accordian">
     <!--category-products-->
-    @foreach (SectionViewModel parentSection in Model)
+    @foreach (SectionViewModel parentSection in Model.Sections)
     {
         if (parentSection.ChildSections.Count > 0)
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordian" href="#@parentSection.Name.ToLower()">
+                        <a data-toggle="collapse" data-parent="#accordian" href="#@parentSection.GetHashCode().ToString()">
                             <span class="badge pull-right"><i class="fa fa-plus"></i></span>
                             @parentSection.Name
                         </a>
                     </h4>
                 </div>
-                <div id="@parentSection.Name.ToLower()" class="panel-collapse collapse">
+                <div id="@parentSection.GetHashCode().ToString()" class="panel-collapse collapse @(parentSection.Id == Model.ParentSectionId ? "in" : null)">
                     <div class="panel-body">
                         <ul>
                             @foreach (SectionViewModel childSection in parentSection.ChildSections)
                             {
-                                <li><a asp-controller="Catalog" asp-action="Shop" asp-route-sectionId="@childSection.Id">@childSection.Name </a></li>
+                                //<li style="@(childSection.Id == Model.CurrentSectionId ? "text-decoration: underline" : null)>"
+                                <li @(childSection.Id == Model.CurrentSectionId ? "class=active" : null)>
+                                    <a asp-controller="Catalog" asp-action="Shop" asp-route-sectionId="@childSection.Id">
+                                        @childSection.Name
+                                    </a>
+                                </li>
                             }
                         </ul>
                     </div>
@@ -32,9 +37,13 @@
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title"><a asp-controller="Catalog" asp-action="Shop" asp-route-sectionId="@parentSection.Id">@parentSection.Name</a></h4>
+                    <h4 class="panel-title">
+                        <a asp-controller="Catalog" asp-action="Shop" asp-route-sectionId="@parentSection.Id">
+                            @parentSection.Name
+                        </a>
+                    </h4>
                 </div>
             </div>
         }
     }
-</div><!--/category-products-->
+</div>

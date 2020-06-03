@@ -17,9 +17,14 @@ namespace WebStore.Clients.Catalog
         {
         }
 
-        public IEnumerable<Brand> GetBrands()
+        public BrandDTO GetBrandById(int id)
         {
-            return Get<List<Brand>>($"{_ServiceAddress}/brands");
+            return Get<BrandDTO>($"{_ServiceAddress}/brands/{id}");
+        }
+
+        public IEnumerable<BrandDTO> GetBrands()
+        {
+            return Get<List<BrandDTO>>($"{_ServiceAddress}/brands");
         }
 
         public ProductDTO GetProductById(int id)
@@ -33,9 +38,14 @@ namespace WebStore.Clients.Catalog
                 .Content.ReadAsAsync<IEnumerable<ProductDTO>>().Result;
         }
 
-        public IEnumerable<Section> GetSections()
+        public SectionDTO GetSectionById(int id)
         {
-            return Get<List<Section>>($"{_ServiceAddress}/sections");
+            return Get<SectionDTO>($"{_ServiceAddress}/sections/{id}");
+        }
+
+        public IEnumerable<SectionDTO> GetSections()
+        {
+            return Get<List<SectionDTO>>($"{_ServiceAddress}/sections");
         }
     }
 }

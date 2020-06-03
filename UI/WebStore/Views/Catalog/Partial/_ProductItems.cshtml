@@ -9,7 +9,7 @@
             <div class="product-image-wrapper">
                 <div class="single-products">
                     <div class="productinfo text-center">
-                        <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-productId="@item.Id">
+                        <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-productId="@item.Id" asp-route-fromBrand="@(Context.Request.Query.ContainsKey("sectionId")?"section":"brand")"> @*asp-route-fromType контроллеру не передается - нужнен только для работы BreadCrumbsViewComponent*@
                             <img src="~/images/shop/@item.ImageUrl" alt="" />
                             <h2>@item.Price.ToString("C")</h2>
                             <p>@item.Name</p>

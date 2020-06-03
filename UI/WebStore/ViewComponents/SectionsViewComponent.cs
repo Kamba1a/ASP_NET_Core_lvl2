@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Domain.DTO.Catalog;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Models;
 using WebStore.Interfaces.Services;
@@ -11,23 +12,32 @@ namespace WebStore.ViewComponents
     public class SectionsViewComponent : ViewComponent
     {
         private readonly ICatalogData _catalogData;
+        private int? _currentParentSectionId;
 
         public SectionsViewComponent(ICatalogData catalogData)
         {
             _catalogData = catalogData;
         }
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string sectionId)
         {
-            List<SectionViewModel> sections = GetSections();
-            return View(sections);
+            int? currentSectionId = int.TryParse(sectionId, out int id) ? id : (int?)null;
+
+            List<SectionViewModel> sections = GetSections(currentSectionId);
+
+            return View(new SectionCompleteViewModel
+            {
+                Sections = sections,
+                CurrentSectionId = currentSectionId,
+                ParentSectionId = _currentParentSectionId
+            });
         }
-        private List<SectionViewModel> GetSections()
+        private List<SectionViewModel> GetSections(int? currentSectionId)
         {
-            IEnumerable<Section> allSections = _catalogData.GetSections();
-            Section[] parentSections = allSections.Where(p => p.ParentId == null).ToArray();
+            IEnumerable<SectionDTO> allSections = _catalogData.GetSections();
+            SectionDTO[] parentSections = allSections.Where(p => p.ParentId == null).ToArray();
             List<SectionViewModel> parentSectionsList = new List<SectionViewModel>();
 
-            foreach (Section parent in parentSections)
+            foreach (SectionDTO parent in parentSections)
             {
                 parentSectionsList.Add(new SectionViewModel
                 {
@@ -40,10 +50,12 @@ namespace WebStore.ViewComponents
 
             foreach (SectionViewModel parent in parentSectionsList)
             {
-                IEnumerable<Section> childSections = allSections.Where(c => c.ParentId == parent.Id);
+                IEnumerable<SectionDTO> childSections = allSections.Where(c => c.ParentId == parent.Id);
 
-                foreach (Section child in childSections)
+                foreach (SectionDTO child in childSections)
                 {
+                    if (child.Id == currentSectionId) _currentParentSectionId = parent.Id;
+
                     parent.ChildSections.Add(new SectionViewModel
                     {
                         Id = child.Id,

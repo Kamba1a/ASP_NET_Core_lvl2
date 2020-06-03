@@ -18,21 +18,23 @@ namespace WebStore.ViewComponents
             _catalogData = catalogData;
         }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string brandId)
         {
-            List<BrandViewModel> brands = GetBrands();
+            int? currentBrandId = int.TryParse(brandId, out int id) ? (int?)id : null;
+
+            List<BrandViewModel> brands = GetBrands(currentBrandId);
             return View(brands);
         }
 
-        private List<BrandViewModel> GetBrands()
+        private List<BrandViewModel> GetBrands(int? currentBrandId)
         {
-            IEnumerable<Brand> allBrands = _catalogData.GetBrands();
+            IEnumerable<BrandDTO> allBrands = _catalogData.GetBrands();
             List<BrandViewModel> allBrandsList = allBrands.Select(brand => new BrandViewModel
             {
                 Id = brand.Id,
                 Name = brand.Name,
                 Order = brand.Order,
-                //ProductsCount = GetProductsCount(brand.Id) //так выдает ошибку "There is already an open DataReader associated with this Command which must be closed first"
+                CurrentBrandId = (currentBrandId.HasValue ? brand.Id == currentBrandId.Value : false)
             }).OrderBy(b => b.Order).ToList();
 
             foreach(BrandViewModel brand in allBrandsList)

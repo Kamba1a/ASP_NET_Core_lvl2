@@ -18,8 +18,14 @@ namespace WebStore.ServiceHosting.Controllers
             _catalogData = catalogData;
         }
 
+        [HttpGet("brands/{id}")]
+        public BrandDTO GetBrandById(int id)
+        {
+            return _catalogData.GetBrandById(id);
+        }
+
         [HttpGet("brands")]
-        public IEnumerable<Brand> GetBrands()
+        public IEnumerable<BrandDTO> GetBrands()
         {
             return _catalogData.GetBrands();
         }
@@ -36,8 +42,14 @@ namespace WebStore.ServiceHosting.Controllers
             return _catalogData.GetProducts(filter);
         }
 
+        [HttpGet("sections/{id}")]
+        public SectionDTO GetSectionById(int id)
+        {
+            return _catalogData.GetSectionById(id);
+        }
+
         [HttpGet("sections")]
-        public IEnumerable<Section> GetSections()
+        public IEnumerable<SectionDTO> GetSections()
         {
             return _catalogData.GetSections();
         }
