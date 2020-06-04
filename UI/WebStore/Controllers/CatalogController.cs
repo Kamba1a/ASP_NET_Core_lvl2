@@ -22,7 +22,7 @@ namespace WebStore.Controllers
 
         public IActionResult Shop(int? sectionId, int? brandId)
         {
-            IEnumerable<ProductDTO> products = _catalogData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId });
+            IEnumerable<ProductDTO> products = _catalogData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId }).Products;
 
             CatalogViewModel catalogViewModel = new CatalogViewModel
             {

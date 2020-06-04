@@ -82,45 +82,49 @@ namespace WebStore.Tests.Controllers
             var product_data_mock = new Mock<ICatalogData>();
             product_data_mock
                .Setup(p => p.GetProducts(It.IsAny<ProductFilter>()))
-               .Returns<ProductFilter>(filter => new[]  //GetProducts будет возвращать массив из двух ProductDTO
-                {
-                    new ProductDTO
-                    {
-                        Id = 1,
-                        Name = "Product 1",
-                        Order = 0,
-                        Price = 10m,
-                        ImageUrl = "Product1.png",
-                        Brand = new BrandDTO
+               .Returns<ProductFilter>(filter => new PageProductsDTO  //GetProducts будет возвращать массив из двух ProductDTO
+               {
+                   TotalCount = 2,
+                   Products = new[]
+                   {
+                        new ProductDTO
                         {
                             Id = 1,
-                            Name = "Brand of product 1"
-                        } ,
-                        Section = new SectionDTO
-                        {
-                            Id = 1,
-                            Name = "Section of product 1"
-                        }
-                    },
-                    new ProductDTO
-                    {
-                        Id = 2,
-                        Name = "Product 2",
-                        Order = 0,
-                        Price = 20m,
-                        ImageUrl = "Product2.png",
-                        Brand = new BrandDTO
-                        {
-                            Id = 2,
-                            Name = "Brand of product 2"
-                        } ,
-                        Section = new SectionDTO
+                            Name = "Product 1",
+                            Order = 0,
+                            Price = 10m,
+                            ImageUrl = "Product1.png",
+                            Brand = new BrandDTO
+                            {
+                                Id = 1,
+                                Name = "Brand of product 1"
+                            } ,
+                            Section = new SectionDTO
+                            {
+                                Id = 1,
+                                Name = "Section of product 1"
+                            }
+                        },
+                        new ProductDTO
                         {
                             Id = 2,
-                            Name = "Section of product 2"
-                        }
-                    },
-                });
+                            Name = "Product 2",
+                            Order = 0,
+                            Price = 20m,
+                            ImageUrl = "Product2.png",
+                            Brand = new BrandDTO
+                            {
+                                Id = 2,
+                                Name = "Brand of product 2"
+                            } ,
+                            Section = new SectionDTO
+                            {
+                                Id = 2,
+                                Name = "Section of product 2"
+                            }
+                        },
+                    }
+               });
 
             var controller = new CatalogController(product_data_mock.Object);
 
