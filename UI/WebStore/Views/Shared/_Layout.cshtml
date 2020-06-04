@@ -65,10 +65,12 @@
     $(function () {
         Cart.init({
             getCartViewLink: "@Url.Action("GetCartView", "Cart")",          //каждому свойству скрипта передаем ссылку на контроллер и определенный метод
-            addToCartLink: "@Url.Action("AddToCartAPI", "Cart")"
+            addToCartLink: "@Url.Action("AddToCartAPI", "Cart")",
+            decrementLink: "@Url.Action("DecrementFromCartAPI", "Cart")",
+            removeFromCartLink: "@Url.Action("RemoveFromCartAPI", "Cart")"
         });
     })
-    </script>
+</script>
 
 
 
