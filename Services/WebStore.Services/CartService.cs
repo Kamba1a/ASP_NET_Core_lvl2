@@ -37,6 +37,9 @@ namespace WebStore.Services
 
         public void AddToCart(int productId)
         {
+            var product = _catalogData.GetProducts().FirstOrDefault(p=>p.Id==productId);
+            if (product == null) return;
+
             Cart cart = _cartStore.Cart; //сначала получаем корзину из куки, либо создаем новую
 
             CartItem cartItem = cart.Items.FirstOrDefault(item => item.ProductId == productId); //находим товар в корзине
@@ -79,6 +82,13 @@ namespace WebStore.Services
 
             foreach (var item in _cartStore.Cart.Items)
             {
+                var product = products.FirstOrDefault(p=>p.Id==item.ProductId);
+                if (product == null)
+                {
+                    RemoveProductFromCart(item.ProductId);
+                    continue;
+                }
+
                 CartItemViewModel cartItem = new CartItemViewModel()
                 {
                    Product = products.First(p => p.Id==item.ProductId),
