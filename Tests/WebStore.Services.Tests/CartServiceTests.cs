@@ -125,7 +125,7 @@ namespace WebStore.Services.Tests
         {
             _Cart.Items.Clear();
 
-            const int expected_id = 5;
+            const int expected_id = 2;
 
             _CartService.AddToCart(expected_id);
 
