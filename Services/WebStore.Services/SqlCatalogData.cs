@@ -26,7 +26,7 @@ namespace WebStore.Services
             return brands.ToDTO();
         }
 
-        public IEnumerable<ProductDTO> GetProducts(ProductFilter filter=null)
+        public PageProductsDTO GetProducts(ProductFilter filter=null)
         {
             IQueryable<Product> products = _webStoreContext.Products.Include(p=>p.Brand).Include(p=>p.Section);
 
@@ -40,7 +40,18 @@ namespace WebStore.Services
                     products = products.Where(product => filter.ProductsIdList.Contains(product.Id));
             }
 
-            return products.ToDTO();
+            int totalCount = products.Count(); //итоговое количество товаров
+            
+            if (filter?.PageSize != null)       //если в фильтре указано количество товаров на странице
+                products = products
+                   .Skip((filter.Page - 1) * (int)filter.PageSize)  //пропускаем количество товаров, которые должны быть на предыдущих страницах
+                   .Take((int)filter.PageSize);                     //оставляем только те товары и в том количестве, которые должны быть на текущей странице
+
+            return new PageProductsDTO()
+            {
+                Products = products.ToDTO(),
+                TotalCount = totalCount
+            };
         }
 
         public IEnumerable<SectionDTO> GetSections()

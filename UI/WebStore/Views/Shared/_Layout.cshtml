@@ -60,7 +60,21 @@
     <script src="~/js/jquery.scrollUp.min.js"></script>
 
 
-    <!--Секция для отображения кастомных скриптов, если понадобятся-->
+    <script src="~/js/Cart/CartLogic.js" asp-append-version="true"></script> @*подключаем наш скрипт для работы с элементами корзины*@
+    <script>                                                                //и здесь же конфигурируем его
+    $(function () {
+        Cart.init({
+            getCartViewLink: "@Url.Action("GetCartView", "Cart")",          //каждому свойству скрипта передаем ссылку на контроллер и определенный метод
+            addToCartLink: "@Url.Action("AddToCartAPI", "Cart")",
+            decrementLink: "@Url.Action("DecrementFromCartAPI", "Cart")",
+            removeFromCartLink: "@Url.Action("RemoveFromCartAPI", "Cart")"
+        });
+    })
+</script>
+
+
+
+    <!--Секция для подгрузки кастомных скриптов, если понадобятся-->
     @RenderSection("scripts", false) @*параметр false означает, что секция не обязательна, т.е. если на какой-либо странице нет @section Scripts{...}, то ошибки не будет*@
 </body>
 </html>

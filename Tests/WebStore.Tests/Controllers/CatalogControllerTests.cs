@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -28,6 +29,7 @@ namespace WebStore.Tests.Controllers
             string expected_name = $"Product id {expected_product_id}";
             string expected_brand_name = $"Brand of product {expected_product_id}";
 
+            var configuration_mock = new Mock<IConfiguration>();
             var product_data_mock = new Mock<ICatalogData>();
             product_data_mock
                .Setup(p => p.GetProductById(It.IsAny<int>())) //It.IsAny сообщает Mock-объекту, какой тип данных должен передаваться в метод
@@ -51,7 +53,7 @@ namespace WebStore.Tests.Controllers
                        }
                    });
 
-            var controller = new CatalogController(product_data_mock.Object);
+            var controller = new CatalogController(product_data_mock.Object, configuration_mock.Object);
 
             #endregion
 
@@ -79,50 +81,56 @@ namespace WebStore.Tests.Controllers
         [TestMethod]
         public void Shop_Returns_Correct_View()
         {
+            var configuration_mock = new Mock<IConfiguration>();
+
             var product_data_mock = new Mock<ICatalogData>();
             product_data_mock
                .Setup(p => p.GetProducts(It.IsAny<ProductFilter>()))
-               .Returns<ProductFilter>(filter => new[]  //GetProducts будет возвращать массив из двух ProductDTO
-                {
-                    new ProductDTO
-                    {
-                        Id = 1,
-                        Name = "Product 1",
-                        Order = 0,
-                        Price = 10m,
-                        ImageUrl = "Product1.png",
-                        Brand = new BrandDTO
+               .Returns<ProductFilter>(filter => new PageProductsDTO  //GetProducts будет возвращать массив из двух ProductDTO
+               {
+                   TotalCount = 2,
+                   Products = new[]
+                   {
+                        new ProductDTO
                         {
                             Id = 1,
-                            Name = "Brand of product 1"
-                        } ,
-                        Section = new SectionDTO
-                        {
-                            Id = 1,
-                            Name = "Section of product 1"
-                        }
-                    },
-                    new ProductDTO
-                    {
-                        Id = 2,
-                        Name = "Product 2",
-                        Order = 0,
-                        Price = 20m,
-                        ImageUrl = "Product2.png",
-                        Brand = new BrandDTO
-                        {
-                            Id = 2,
-                            Name = "Brand of product 2"
-                        } ,
-                        Section = new SectionDTO
+                            Name = "Product 1",
+                            Order = 0,
+                            Price = 10m,
+                            ImageUrl = "Product1.png",
+                            Brand = new BrandDTO
+                            {
+                                Id = 1,
+                                Name = "Brand of product 1"
+                            } ,
+                            Section = new SectionDTO
+                            {
+                                Id = 1,
+                                Name = "Section of product 1"
+                            }
+                        },
+                        new ProductDTO
                         {
                             Id = 2,
-                            Name = "Section of product 2"
-                        }
-                    },
-                });
+                            Name = "Product 2",
+                            Order = 0,
+                            Price = 20m,
+                            ImageUrl = "Product2.png",
+                            Brand = new BrandDTO
+                            {
+                                Id = 2,
+                                Name = "Brand of product 2"
+                            } ,
+                            Section = new SectionDTO
+                            {
+                                Id = 2,
+                                Name = "Section of product 2"
+                            }
+                        },
+                    }
+               });
 
-            var controller = new CatalogController(product_data_mock.Object);
+            var controller = new CatalogController(product_data_mock.Object, configuration_mock.Object);
 
             const int expected_section_id = 1;
             const int expected_brand_id = 5;

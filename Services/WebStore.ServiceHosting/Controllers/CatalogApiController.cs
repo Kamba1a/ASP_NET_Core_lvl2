@@ -37,7 +37,7 @@ namespace WebStore.ServiceHosting.Controllers
         }
 
         [HttpPost] //метод Post, т.к. нужно передать данные фильтра в теле сообщения, а не в строке запроса
-        public IEnumerable<ProductDTO> GetProducts([FromBody]ProductFilter filter = null)
+        public PageProductsDTO GetProducts([FromBody]ProductFilter filter = null)
         {
             return _catalogData.GetProducts(filter);
         }

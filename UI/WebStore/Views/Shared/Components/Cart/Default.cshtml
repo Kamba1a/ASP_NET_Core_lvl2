@@ -1,0 +1,9 @@
+﻿@model CartViewModel
+
+@{
+    int? product_count = Model.ItemsCount > 0 ? Model.ItemsCount : (int?)null;
+}
+
+<div>
+    <a asp-controller="Cart" asp-action="Cart"><i class="fa fa-shopping-cart"></i> Корзина</a> @product_count
+</div> 

@@ -32,10 +32,10 @@ namespace WebStore.Clients.Catalog
             return Get<ProductDTO>($"{_ServiceAddress}/products/{id}");
         }
 
-        public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null)
+        public PageProductsDTO GetProducts(ProductFilter filter = null)
         {
             return Post(_ServiceAddress, filter ?? new ProductFilter())    //значение null не может быть передано, поэтому обязательно создаем пустой фильтр если
-                .Content.ReadAsAsync<IEnumerable<ProductDTO>>().Result;
+                .Content.ReadAsAsync<PageProductsDTO>().Result;
         }
 
         public SectionDTO GetSectionById(int id)

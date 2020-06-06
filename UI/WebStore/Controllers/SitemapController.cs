@@ -31,7 +31,7 @@ namespace WebStore.Controllers
                 nodes.Add(new SitemapNode(Url.Action("Shop", "Catalog", new { brandId = brand.Id })));
 
             //добавляем к списку каждую страницу каждого товара
-            foreach (var product in catalogData.GetProducts())
+            foreach (var product in catalogData.GetProducts().Products)
                 nodes.Add(new SitemapNode(Url.Action("ProductDetails", "Catalog", new { product.Id })));
 
             return new SitemapProvider().CreateSitemap(new SitemapModel(nodes)); //передаем список провайдеру для создания карты сайта 

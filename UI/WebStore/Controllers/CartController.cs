@@ -101,5 +101,37 @@ namespace WebStore.Controllers
         {
             return View(orderNumber);
         }
+
+
+        #region WebAPI
+        //методы будут использоваться нашим js-скриптом (или можно даже создать новый контроллер для этого)
+
+        public IActionResult GetCartView() => ViewComponent("Cart"); //для возможности передачи ViewComponent через скрипт
+
+        public IActionResult AddToCartAPI(int id)
+        {
+            _cartService.AddToCart(id);
+            return Json(new { id, message = $"Товар id:{id} был добавлен в корзину" }); //просто для примера, т.к. в нашей реализации это сообщение не будет использоваться скриптом
+        }
+
+        public IActionResult DecrementFromCartAPI(int id)
+        {
+            _cartService.DecrementProductQuantity(id);
+            return Ok();
+        }
+
+        public IActionResult RemoveFromCartAPI(int id)
+        {
+            _cartService.RemoveProductFromCart(id);
+            return Ok();
+        }
+
+        public IActionResult RemoveAllAPI()
+        {
+            _cartService.RemoveAllProductsFromCart();
+            return Ok();
+        }
+
+        #endregion
     }
 }

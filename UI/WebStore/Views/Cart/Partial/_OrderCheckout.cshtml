@@ -7,7 +7,9 @@
             <li>Eco Tax <span>$2</span></li>
             <li>Shipping Cost <span>Free</span></li>*@
 
-            <li>Total <span>$@Model</span></li>
+            <li>
+                @await Html.PartialAsync("Partial/_OrderTotalPrice", Model)
+            </li>
 
         </ul>
         @*<a class="btn btn-default update" href="">Update</a>*@

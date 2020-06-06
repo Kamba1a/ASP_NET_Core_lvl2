@@ -49,7 +49,7 @@ namespace WebStore.ViewComponents
         {
             int productCount = 0;
 
-            foreach (ProductDTO product in _catalogData.GetProducts())
+            foreach (ProductDTO product in _catalogData.GetProducts().Products)
             {
                 if (product.Brand.Id == brandId) productCount = productCount + 1;
             }
