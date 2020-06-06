@@ -17,18 +17,21 @@
                 @await Html.PartialAsync("Partial/_LeftSideBar")
             </div>
             <div class="col-sm-9 padding-right">
-                @await Html.PartialAsync("Partial/_ProductItems", Model.Products)
-                
+
+                <div id="catalog-items-container">
+                    @*идентификатор для обращения из скрипта для асинхронного пейджинга*@
+                    @await Html.PartialAsync("Partial/_ProductItems", Model.Products)   @*скрипт асинхронного пейджинга будет заменять содержимое блока*@
+                </div>
+
                 @*<ul class="pagination">
-                    <li class="active"><a href="">1</a></li>
-                    <li><a href="">2</a></li>
-                    <li><a href="">3</a></li>
-                    <li><a href="">&raquo;</a></li>
-                </ul>*@
+                        <li class="active"><a href="">1</a></li>
+                        <li><a href="">2</a></li>
+                        <li><a href="">3</a></li>
+                        <li><a href="">&raquo;</a></li>
+                    </ul>*@
 
                 @*собственный тег-хелпер для переключения страниц с товарами*@
-                <paging 
-                        page-model="@Model.PageViewModel" 
+                <paging page-model="@Model.PageViewModel"
                         page-action="Shop"
                         page-url-sectionId="@Model.SectionId"
                         page-url-brandId="@Model.BrandId">
@@ -39,10 +42,22 @@
     </div>
 </section>
 
+@*в _Layout настроена подгрузка секции RenderSectionAsync("Scripts", false)*@
+@section Scripts{
+    <script src="~/lib/jquery-loading-overlay/loadingoverlay.min.js"></script> @*клиентская библиотека для отображения значка загрузки элемента*@
+    <script src="~/js/Catalog/CatalogLogic.js" asp-append-version="true"></script>  @*собственный скрипт для асинхронного пейджинга*@
+    <script>
+        $(function() {
+            Catalog.init({
+                getUrl: "@Url.Action("GetFilteredItems","Catalog")"
+            });
+        })
+    </script>
+}
 
-<script src="~/js/jquery.js"></script>
-<script src="~/js/price-range.js"></script>
-<script src="~/js/jquery.scrollUp.min.js"></script>
-<script src="~/js/bootstrap.min.js"></script>
-<script src="~/js/jquery.prettyPhoto.js"></script>
-<script src="~/js/main.js"></script>
+@*<script src="~/js/jquery.js"></script>
+    <script src="~/js/price-range.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.prettyPhoto.js"></script>
+    <script src="~/js/main.js"></script>*@
