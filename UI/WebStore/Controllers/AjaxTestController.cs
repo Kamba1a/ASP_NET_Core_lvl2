@@ -9,7 +9,7 @@ namespace WebStore.Controllers
     {
         public IActionResult Index() => View();
 
-        //Методы ниже занимаются одним и тем же, но по-разному возвращают результат
+        #region Методы ниже занимаются одним и тем же, но по-разному возвращают результат
 
         /// <summary>Метод возвращающей некие данные в виде Json объекта</summary>
         /// <param name="id"></param>
@@ -41,5 +41,9 @@ namespace WebStore.Controllers
                 ServerTime = DateTime.Now
             });
         }
+
+        #endregion
+
+        public IActionResult SignalRTest() => View();
     }
 }
