@@ -1,13 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebStore.Domain.Models
 {
-    /// <summary>
-    /// Класс с полями регистрации пользователя
-    /// </summary>
+    /// <summary>Модель представления полей для регистрации пользователя</summary>
     public class RegisterUserViewModel
     {
         [Required, MaxLength(256)]
+        [Remote("IsNameFree", "Account")]   //подключаем метод IsNameFree в контроллере Account для своей валидации с помощью ненавязчивого AJAX
         public string UserName { get; set; }
 
         [Required, DataType(DataType.EmailAddress)]
