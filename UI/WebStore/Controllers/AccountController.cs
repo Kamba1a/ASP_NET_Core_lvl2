@@ -85,5 +85,16 @@ namespace WebStore.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        //Метод валидации с помощью ненавязчивого AJAX - следует подключить валидацию с помощью такого метода через модель представления (в данном случае в RegisterUserViewModel)
+        /// <summary>Метод для валидации имени пользователя на уникальность при регистрации</summary>
+        /// <param name="UserName"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> IsNameFree(string UserName) 
+        {
+            var user = await _userManager.FindByNameAsync(UserName);        //ищем имя пользователя через UserManager
+            if (user != null) return Json("Пользователь уже существует");   //если пользователь с таким именем найден, то валидатор возвращает указанный текст
+            return Json("true");                                            //иначе все ок
+        }
     }
 }

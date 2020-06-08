@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "SignalRTest";
+}
+
+    <div class="container">
+        <h3>SignalR Test</h3>
+        <p>Что-то вроде минимальной заготовки для чата</p>
+        <p>Можно проверить, отсылая сообщения из разных вкладок - во всех будут сразу отображаться</p>
+        <div>
+            <div id="input-form">
+                <input type="text" id="message" />  @*ввод сообщения*@
+                <input type="button" value="Отправить" id="send-button" class="btn btn-default" /> @*кнопка отправки сообщения*@
+            </div>
+            <p>Выводимые сообщения:</p>
+            <ul id="information-block"></ul> @*блок для вывода сообщений*@
+        </div>
+
+    </div>
+
+@section Scripts
+{
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+
+    <script>
+        let hub_url = "/info";  //указываем адрес хаба
+        const connection = new signalR.HubConnectionBuilder() //создаем подключение и далее настраиваем
+            .withUrl(hub_url)
+            .build();
+
+        //прием данных от сервера
+        connection.on("Send", data =>       //отслеживается действие "Send", после которого получаем данные
+            $("#information-block").prepend($("<li></li>").html(data))); //и загружаем их в блок (<ul>) с указанным id, внутри создаваемого элемента <li>
+
+        //передача данных на сервер
+        $("#send-button").click(e =>    //при клике на кнопку с указанным id
+            connection.invoke("Send", $("#message").val()));    //вызывается метод "Send" в хабе и передаются данные из блока с указанным id
+
+        connection.start(); //запускаем соединение
+    </script>
+}

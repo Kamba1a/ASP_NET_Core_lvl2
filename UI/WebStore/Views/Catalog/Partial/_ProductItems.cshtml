@@ -11,9 +11,10 @@
                     <div class="productinfo text-center">
 
                         <a asp-controller="Catalog" asp-action="ProductDetails"
-                           asp-route-productId="@item.Id" 
-                           asp-route-fromBrand="@(Context.Request.Query.ContainsKey("sectionId")?"section":"brand")"> @*asp-route-fromType контроллеру не передается - нужнен только для работы BreadCrumbsViewComponent*@
-                            
+                           asp-route-productId="@item.Id"
+                           asp-route-fromBrand="@(Context.Request.Query.ContainsKey("sectionId")?"section":"brand")">
+                            @*asp-route-fromType контроллеру не передается - нужнен только для работы BreadCrumbsViewComponent*@
+
                             <img src="~/images/shop/@item.ImageUrl" alt="" />
                             <h2>@item.Price.ToString("C")</h2>
                             <p>@item.Name</p>
@@ -24,8 +25,8 @@
                            asp-route-returnUrl="@Context.Request.Path"
                            data-id="@item.Id"
                            class="btn btn-default add-to-cart">
-                            @*по классу add-to-cart наш js-скрипт "Cart" будет определять все кнопки добавления в корзину на сайте, 
-                            data-id - словарь с ключом "id" для возможности передать в скрипт идентификатор товара*@
+                            @*по классу add-to-cart наш js-скрипт "Cart" будет определять все кнопки добавления в корзину на сайте,
+                                data-id - словарь с ключом "id" для возможности передать в скрипт идентификатор товара*@
 
                             <i class="fa fa-shopping-cart"></i>
                             Добавить в корзину
@@ -33,12 +34,12 @@
 
                     </div>
                     @*<div class="product-overlay">
-                        <div class="overlay-content">
-                            <h2>@item.Price.ToString("C")</h2>
-                            <p>@item.Name</p>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Добавить в корзину</a>
-                        </div>
-                    </div>*@
+                            <div class="overlay-content">
+                                <h2>@item.Price.ToString("C")</h2>
+                                <p>@item.Name</p>
+                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Добавить в корзину</a>
+                            </div>
+                        </div>*@
                 </div>
                 <div class="choose">
                     <ul class="nav nav-pills nav-justified">
@@ -50,3 +51,11 @@
         </div>
     }
 </div><!--features_items-->
+
+@*<script> //способ решить ошибку добавления товара в корзину с остальных страниц
+$(function () {
+    Cart.init({
+        addToCartLink: "@Url.Action("AddToCartAPI", "Cart")",
+    });
+})
+</script>*@

@@ -341,3 +341,4 @@ ASALocalRun/
 healthchecksdb
 /Services/WebStore.ServiceHosting/WebStore.ServiceHosting.xml
 /Common/WebStore.Domain/WebStore.Domain.xml
+/UI/WebStore/wwwroot/lib

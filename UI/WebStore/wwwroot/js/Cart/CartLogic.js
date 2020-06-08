@@ -17,6 +17,11 @@
         $(".cart_quantity_up").click(Cart.incrementItem);
         $(".cart_quantity_down").click(Cart.decrementItem);
         $(".cart_quantity_delete").click(Cart.removeFromCart);
+
+        //необходимо для корректной работы кнопок "Добавить в корзину" на всех страницах каталога:
+        $("body").on('DOMSubtreeModified', "#catalog-items-container", function () { //событие DOMSubtreeModified срабатывает всякий раз когда структура или текст внутри элемента изменяется
+            $(".add-to-cart").click(Cart.addToCart);    //при переходе на другие страницы каталога, перепривязывает обработчик к кнопкам новых товаров
+        });
     },
 
     addToCart: function (event) {               //обработчик события клика добавления товара в корзину

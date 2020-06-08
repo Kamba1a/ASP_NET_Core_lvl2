@@ -13,6 +13,7 @@ using WebStore.Clients.Identity;
 using WebStore.Clients.Orders;
 using WebStore.Clients.Values;
 using WebStore.Domain.Entities.Identity;
+using WebStore.Hubs;
 using WebStore.Infrastructure.Middleware;
 using WebStore.Interfaces.Api;
 using WebStore.Interfaces.Services;
@@ -31,6 +32,8 @@ namespace WebStore
 
         public void ConfigureServices(IServiceCollection services) //сюда добавляем сервисы, какие будем использовать
         {
+            services.AddSignalR(); //подключаем SignalR хабы
+
             services.AddMvc();
 
             //(options => options.Filters.Add(new Example_SimpleActionFilter())) //для добавления фильтра ко всем методам всех контроллеров
@@ -148,6 +151,8 @@ namespace WebStore
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<InformationHub>("/info");  //привязываем хаб InformationHub к адресу /info
+
                 //пути по-умолчанию к главным страницам
                 endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");  //области
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{Id?}");              //контроллеры
